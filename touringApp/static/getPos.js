@@ -1,4 +1,8 @@
 $(document).ready(function(){
+
+	//ここにPOSTするようのデータを格納
+	var GISdata = [];
+
 	//google map作成
 	var map = new google.maps.Map(document.getElementById("map"), {
     	zoom: 5,
@@ -40,7 +44,7 @@ $(document).ready(function(){
 		}
 	}
 
-	//ログ取得
+	//ログ取得　ajaxで使うデータを格納
 	$('#getLog').click(function(){
 		//ルートを検索し、座標をテキストエリアに表示する
 		new google.maps.DirectionsService().route({
@@ -61,6 +65,11 @@ $(document).ready(function(){
 	        suppressMarkers: true
 	      });
 				routeDisplay.setDirections(result);
+
+				//GISdataに格納！！！！！！！　POST用別ボタンを作る
+
+
+
 
 	    } else if (status == google.maps.DirectionsStatus.INVALID_REQUEST) {
 	    		alert("DirectionsRequestに問題アリ！渡している内容を確認せよ！！");
@@ -89,6 +98,7 @@ $(document).ready(function(){
 		for (var i = 0; i < markers.length; i++){
 			markers[i].setMap(null);
 		}
+		GISdata = [];
 		markers = [];
 		points = [];
 		waypts = [];
