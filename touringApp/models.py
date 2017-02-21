@@ -11,10 +11,8 @@ class Route(models.Model):
         return self.route_name
 
 
-class RoutePass(models.Model):
+class Pass(models.Model):
     route = models.ForeignKey(Route, on_delete=models.CASCADE)
     order = models.IntegerField()
     latitude = models.FloatField()
     longitude =  models.FloatField()
-    def __str__(self):
-        return self.id
