@@ -128,7 +128,7 @@ $(document).ready(function(){
 	$('#sendLog').click(function(){
 
 		$.ajax({
-	    url: "http://127.0.0.1:8000/touringApp/showGIS/",
+	    url: "http://127.0.0.1:8000/touringApp/getGIS/",
 	    type: "POST",
 	    contentType: "application/json; charset=utf-8",
 	    datatype: "json",

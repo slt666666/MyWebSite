@@ -10,7 +10,13 @@ def index(request):
 
 
 def getGIS(request):
-    return render(request, 'touringApp/getGIS.html')
+    if request.method == "POST":
+        newRoute = Route(route_name = "test_2",log_date = timezone.now())
+        newRoute.save()
+        newRoute.pass_set.create(order=1,latitude=2.5,longitude=4.8)
+        return render(request, 'touringApp/getGIS.html')
+    else:
+        return render(request, 'touringApp/getGIS.html')
 
 
 def showGIS(request):
