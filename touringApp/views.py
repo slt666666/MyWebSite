@@ -14,7 +14,8 @@ def getGIS(request):
 
 
 def showGIS(request):
-    newRoute = Route.objects.get(pk=1)
+    newRoute = Route(route_name = "test_1",log_date = timezone.now())
+    newRoute.save()
     newRoute.pass_set.create(order=1,latitude=2.5,longitude=4.8)
     return HttpResponse("a")
     #route = Route
