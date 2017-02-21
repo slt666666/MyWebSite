@@ -1,3 +1,41 @@
+jQuery(document).ajaxSend(function(event, xhr, settings) {
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie != '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    function sameOrigin(url) {
+        // url could be relative or scheme relative or absolute
+        var host = document.location.host; // host + port
+        var protocol = document.location.protocol;
+        var sr_origin = '//' + host;
+        var origin = protocol + sr_origin;
+        // Allow absolute or scheme relative URLs to same origin
+        return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+            (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+            // or any other URL that isn't scheme relative or absolute i.e relative.
+            !(/^(\/\/|http:|https:).*/.test(url));
+    }
+    function safeMethod(method) {
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+
+    if (!safeMethod(settings.type) && sameOrigin(settings.url)) {
+        xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+    }
+});
+
+
 $(document).ready(function(){
 
 	//ここにPOSTするようのデータを格納
@@ -58,6 +96,7 @@ $(document).ready(function(){
 	  	if (status == google.maps.DirectionsStatus.OK) {
 	  		var arr = result.routes[0].overview_path;
 				for (var i = 0; i < arr.length; i++) {
+					GISdata.push([arr[i].lat(),arr[i].lng()]);
 	      	$('#log').append("緯度" + arr[i].lat() + "経度" + arr[i].lng());
 	      }
 	      routeDisplay = new google.maps.DirectionsRenderer({
@@ -65,11 +104,6 @@ $(document).ready(function(){
 	        suppressMarkers: true
 	      });
 				routeDisplay.setDirections(result);
-
-				//GISdataに格納！！！！！！！　POST用別ボタンを作る
-
-
-
 
 	    } else if (status == google.maps.DirectionsStatus.INVALID_REQUEST) {
 	    		alert("DirectionsRequestに問題アリ！渡している内容を確認せよ！！");
@@ -89,6 +123,24 @@ $(document).ready(function(){
 	    		alert("DirectionsService バージョンアップ？");
 	  	}
 		});
+	});
+
+	$('#sendLog').click(function(){
+
+		$.ajax({
+	    url: "http://127.0.0.1:8000/touringApp/showGIS/",
+	    type: "POST",
+	    contentType: "application/json; charset=utf-8",
+	    datatype: "json",
+	    data: GISdata,
+	    success: function(data) {
+	        alert("送信成功");
+	    },
+	    error: function() {
+	        alert("失敗");
+	    }
+		});
+
 	});
 
 	//リセット
