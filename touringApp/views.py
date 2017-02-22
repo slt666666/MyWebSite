@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse
 from .models import Route, Pass
 from django.utils import timezone
-import json as simplejson
+import json
 
 # Create your views here.
 def index(request):
@@ -11,9 +11,11 @@ def index(request):
 
 def getGIS(request):
     if request.method == "POST":
-        newRoute = Route(route_name = "test_2",log_date = timezone.now())
+        print json.loads(request.body) # [[123.32,23.44],[123.32,23.44],[123.32,23.44]]
+        pass1 = json.loads(request.body)
+        newRoute = Route(route_name = "test_3",log_date = timezone.now())
         newRoute.save()
-        newRoute.pass_set.create(order=1,latitude=2.5,longitude=4.8)
+        newRoute.pass_set.create(order=12,latitude=pass1[0][1],longitude=4.8)
         return render(request, 'touringApp/getGIS.html')
     else:
         return render(request, 'touringApp/getGIS.html')
