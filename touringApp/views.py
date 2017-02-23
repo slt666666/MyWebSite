@@ -11,12 +11,12 @@ def index(request):
 
 def getGIS(request):
     if request.method == "POST":
-        pass1 = json.loads(request.body)
-        print pass1 # [[123.32,23.44],[123.32,23.44],[123.32,23.44]...]
-        newRoute = Route(route_name = pass1[len(pass1)-2],log_date = timezone.now())
+        passData = json.loads(request.body)
+        #print passData
+        newRoute = Route(route_name = passData[len(passData)-2],log_date = passData[len(passData)-1])
         newRoute.save()
-        for num in range(0, len(pass1)-3):
-            newRoute.pass_set.create(order=num+1,latitude=pass1[num][0],longitude=pass1[num][1])
+        for num in range(0, len(passData)-3):
+            newRoute.pass_set.create(order=num+1,latitude=passData[num][0],longitude=passData[num][1])
         return render(request, 'touringApp/getGIS.html')
     else:
         return render(request, 'touringApp/getGIS.html')

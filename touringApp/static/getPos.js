@@ -104,6 +104,7 @@ $(document).ready(function(){
 	        suppressMarkers: true
 	      });
 				routeDisplay.setDirections(result);
+				document.getElementById("sendLog").disabled = "";
 	    } else {
 					alert(status);
 	  	}

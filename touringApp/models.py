@@ -6,7 +6,7 @@ from django.db import models
 
 class Route(models.Model):
     route_name = models.CharField(max_length=50)
-    log_date = models.DateTimeField('date of the touring')
+    log_date = models.DateField('date of the touring')
     def __str__(self):
         return self.route_name
 
