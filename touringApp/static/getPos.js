@@ -148,7 +148,5 @@ $(document).ready(function(){
 		points = [];
 		waypts = [];
 		routeDisplay.setMap(null);
-		//ログ消去
-		$('#log').empty();
 	});
 });
