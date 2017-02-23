@@ -85,6 +85,7 @@ $(document).ready(function(){
 	//ログ取得　ajaxで使うデータを格納
 	$('#getLog').click(function(){
 		//ルートを検索し、座標をテキストエリアに表示する
+		GISdata = [];
 		new google.maps.DirectionsService().route({
 	  	origin:      new google.maps.LatLng(points[0][0],points[0][1]),
 	  	destination: new google.maps.LatLng(points[points.length-1][0],points[points.length-1][1]),
@@ -97,50 +98,41 @@ $(document).ready(function(){
 	  		var arr = result.routes[0].overview_path;
 				for (var i = 0; i < arr.length; i++) {
 					GISdata.push([arr[i].lat(),arr[i].lng()]);
-	      	$('#log').append("緯度" + arr[i].lat() + "経度" + arr[i].lng());
 	      }
 	      routeDisplay = new google.maps.DirectionsRenderer({
 	      	map: map,
 	        suppressMarkers: true
 	      });
 				routeDisplay.setDirections(result);
-
-	    } else if (status == google.maps.DirectionsStatus.INVALID_REQUEST) {
-	    		alert("DirectionsRequestに問題アリ！渡している内容を確認せよ！！");
-	  	} else if (status == google.maps.DirectionsStatus.MAX_WAYPOINTS_EXCEEDED) {
-	    		alert("DirectionsRequestのDirectionsWaypointsが多すぎ！");
-	  	} else if (status == google.maps.DirectionsStatus.NOT_FOUND) {
-	    		alert("DirectionsRequestのorigin,destination,waypointsのいずれかのジオコーディングに失敗！");
-	  	} else if (status == google.maps.ElevationStatus.OVER_QUERY_LIMIT) {
-	    		alert("短時間にDirectionsRequestクエリを送りすぎ！");
-	  	} else if (status == google.maps.ElevationStatus.REQUEST_DENIED) {
-	    		alert("このページでは DirectionsRequest の利用が許可されていない！");
-	  	} else if (status == google.maps.ElevationStatus.UNKNOWN_ERROR) {
-	    		alert("DirectionsServiceで原因不明のなんらかのトラブルが発生した模様。");
-	  	} else if (status == google.maps.ElevationStatus.ZERO_RESULTS) {
-	    		alert("DirectionsServiceでorigin,destinationを結ぶ経路が見つかりません。");
-	  	} else {
-	    		alert("DirectionsService バージョンアップ？");
+	    } else {
+					alert(status);
 	  	}
 		});
 	});
 
 	$('#sendLog').click(function(){
-		console.log(GISdata);    // [[123.11, 22.22],[123.11, 22.22],[123.11, 22.22]みたいな感じ
-		$.ajax({
-	    url: "http://127.0.0.1:8000/touringApp/getGIS/",
-	    type: "POST",
-	    contentType: "application/json; charset=utf-8",
-	    datatype: "json",
-	    data: JSON.stringify(GISdata),
-	    success: function(data) {
-	        alert("送信成功");
-	    },
-	    error: function() {
-	        alert("失敗");
-	    }
-		});
-
+		var routeName = document.getElementById("routeName").value;
+		var routeDate = document.getElementById("routeDate").value;
+		if (routeName == "" || routeDate == "") {
+			alert("ルート名・時間を入力してください");
+		}else{
+			GISdata.push(routeName);
+			GISdata.push(routeDate);
+			console.log(GISdata);    // [[123.11, 22.22],[123.11, 22.22],[123.11, 22.22]みたいな感じ
+			$.ajax({
+		    url: "http://127.0.0.1:8000/touringApp/getGIS/",
+		    type: "POST",
+		    contentType: "application/json; charset=utf-8",
+		    datatype: "json",
+		    data: JSON.stringify(GISdata),
+		    success: function(data) {
+		        alert("送信成功");
+		    },
+		    error: function() {
+		        alert("失敗");
+		    }
+			});
+		}
 	});
 
 	//リセット
