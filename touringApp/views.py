@@ -6,7 +6,7 @@ import json
 
 # Create your views here.
 def index(request):
-    return HttpResponse("To Make Top Page !!!")
+    return render(request, 'touringApp/index.html')
 
 
 def getGIS(request):
