@@ -230,9 +230,6 @@ L.Label = L.Layer.extend({
         this._status = "dimmed";
         this._container.style.opacity = "0.5";
         break;
-      case "vanished":
-        this._status = "vanished";
-        this._container.style.opacity = "0";
     }
   }
 });
@@ -265,7 +262,7 @@ var buildLabelAnimation = function(){
         );
         // そして消える
         labels.push(
-          {minutes: minutes+50, label: label, status: "vanished"}
+          {minutes: minutes+50, label: label, status: "hidden"}
         );
       }
       minutes += stop.duration;
