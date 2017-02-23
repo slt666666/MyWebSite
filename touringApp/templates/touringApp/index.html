@@ -2,15 +2,16 @@
 {% load leaflet_tags %}
 
 <!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="utf-8">
-  {% leaflet_js %}
-  {% leaflet_css %}
-</head>
-
-<body>
-
-    {% leaflet_map "yourmap" %}
-
-</body>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+    {% leaflet_js %}
+    {% leaflet_css %}
+		<link rel="stylesheet" href="{% static 'sample.css' %}">
+    <script type="text/javascript" src="{% static 'getPos.js' %}" charset="utf-8"></script>
+	</head>
+	<body>
+		<div id="map"></div>
+		<script src="{% static 'route.js' %}"></script>
+	</body>
+</html>

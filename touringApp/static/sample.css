@@ -1,0 +1,9 @@
+.leaflet-container {
+  cursor: default;
+}
+#map {
+  width: 840px;
+  height: 660px;
+  margin: 40px auto;
+  border: 1px solid #CECDD2;
+}
