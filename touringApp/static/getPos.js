@@ -119,7 +119,6 @@ $(document).ready(function(){
 		}else{
 			GISdata.push(routeName);
 			GISdata.push(routeDate);
-			console.log(GISdata);    // [[123.11, 22.22],[123.11, 22.22],[123.11, 22.22]みたいな感じ
 			$.ajax({
 		    url: "http://127.0.0.1:8000/touringApp/getGIS/",
 		    type: "POST",
