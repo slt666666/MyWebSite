@@ -1,7 +1,3 @@
-/*------------*/
-/** Data Set **/
-/*------------*/
-
 var seaboard = [
     { "stop": "Washington",     "latitude": 38.895111, "longitude": -77.036667, "duration":  77, "offset": [-30,-10] },
     { "stop": "Fredericksburg", "latitude": 38.301806, "longitude": -77.470833, "duration":  89, "offset": [  6,  4] },
@@ -29,20 +25,12 @@ var mapLastY = Math.max.apply(null,seaboard.map(function(pass){ return pass['lon
 var map = L.map("map", {
   center: [(mapFirstX+mapLastX)/2, (mapFirstY+mapLastY)/2],
   maxBounds: [ [mapFirstX, mapFirstY], [mapLastX, mapLastY] ],
-  zoom: 7,
-  minZoom: 7,
-  maxZoom: 7,
-  dragging: false,
-  zoomControl: false,
-  touchZoom: false,
-  scrollWheelZoom: false,
-  doubleClickZoom: false,
-  boxZoom: false,
-  keyboard: false
+  zoom: 7, minZoom: 7, maxZoom: 7,
+  dragging: false, zoomControl: false, touchZoom: false,
+  scrollWheelZoom: false, doubleClickZoom: false,
+  boxZoom: false, keyboard: false
 });
 
-
-// タイルセットをベースに地図を描く
 // http://leaflet-extras.github.io/leaflet-providers/preview/ 参照
 L.tileLayer("http://server.arcgisonline.com/ArcGIS/rest/services/"+
             "Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}", {
@@ -96,8 +84,6 @@ L.Control.Animate = L.Control.extend({
       link.href = "#",
       link.title = title;
 
-    // mousedown,dblclick無視　・・・APIよくわからない
-    // クリックがドキュメントツリーの上位に伝播させない　・・・APIよくわからない
     // clickイベントに対するコールバック関数実行
     L.DomEvent
       .on(link, "mousedown dblclick", L.DomEvent.stopPropagation)
@@ -107,8 +93,7 @@ L.Control.Animate = L.Control.extend({
     return link;
   },
 
-  // 現在動作中かどうかの状態変数、停止中から始める
-  _running: false,
+  _running: false,  //停止中から
 
   //状態変数に応じて状態を変化させる
   _clicked: function() {
@@ -140,10 +125,7 @@ L.control.animate = function(options){
   return new L.Control.Animate(options);
 };
 
-
 // Leaflet構文でコントロールを作成
-//L.control.animate().addTo(map);
-
 var buildAnimation = function(route, options){
   var animation = [];
 
@@ -154,17 +136,16 @@ var buildAnimation = function(route, options){
     var nextStop = route[stopIdx+1]
     prevStops.push([stop.latitude, stop.longitude]);
 
-    for (var minutes = 1; minutes <= stop.duration; minutes++){
+    for (var minutes = 1; minutes <= 80; minutes++){
       var position = [
-        stop.latitude + (nextStop.latitude - stop.latitude) * (minutes/stop.duration),
-        stop.longitude + (nextStop.longitude - stop.longitude) * (minutes/stop.duration)
+        stop.latitude + (nextStop.latitude - stop.latitude) * (minutes/80),
+        stop.longitude + (nextStop.longitude - stop.longitude) * (minutes/80)
       ];
       animation.push(
         L.polyline(prevStops.concat([position]), options)
       );
     }
   }
-
   return animation;
 }
 
@@ -173,7 +154,6 @@ var routeAnimation = buildAnimation(seaboard,
     {clickable: false, color: "#88020B", weight: 8, opacity: 1.0}
   );
 
-
 //ラベルオブジェクトを作成する
 L.Label = L.Layer.extend({
 
@@ -181,35 +161,18 @@ L.Label = L.Layer.extend({
   initialize: function(latLng, label, options){
     this._latlng = latLng;
     this._label = label;
-    L.Util.setOptions(this, options);
     this._status = "hidden";
   },
 
-  // initializeメソッド内のL.Util.setOptions呼び出しと組み合わせ
-  // Labelオブジェクト作成時に簡単にオーバーライドできるオフセットのデフォルト値指定
-  options: {
-    offset: new L.Point(0, 0)
-  },
-
   onAdd: function(map){
-    // leaflet-labelクラスを持つdiv要素作成
-    this._container = L.DomUtil.create("div", "leaflet-label");
-    // そのdiv要素の高さを0にし、位置計算での不測事態回避
-    this._container.style.height = "0";
-    // そのdiv要素のopacityを0にし、初期状態hiddenにあわせる
-    this._container.style.opacity = "0";
-    // この要素をmarkerPaneレイヤに追加・・・Paneがよくわからん
-    map.getPanes().markerPane.appendChild(this._container);
-    // 表示画像設定
-    this._container.innerHTML = "<img src ='http://www.d3.dion.ne.jp/~tiyoko01/hyo/twin.jpg'>";
-    // 緯度経度からラベルの位置を計算し、オフセット調整
-    var position = map.latLngToLayerPoint(this._latlng);
-    var op = new L.Point(
-      position.x + this.options.offset.x,
-      position.y + this.options.offset.y
-    );
-    //この要素を地図上に配置
-    L.DomUtil.setPosition(this._container, op);
+    this._container = L.DomUtil.create("div", "leaflet-label"); // leaflet-labelクラスを持つdiv要素作成
+    this._container.style.height = "0"; // そのdiv要素の高さを0にし、位置計算での不測事態回避
+    this._container.style.opacity = "0"; // そのdiv要素のopacityを0にし、初期状態hiddenにあわせる
+    map.getPanes().markerPane.appendChild(this._container); // この要素をmarkerPaneレイヤに追加・・・Paneがよくわからん
+    this._container.innerHTML = "<img src ='http://www.d3.dion.ne.jp/~tiyoko01/hyo/twin.jpg'>"; // 表示画像設定
+    var position = map.latLngToLayerPoint(this._latlng); // 緯度経度からラベルの位置を計算し、オフセット調整
+    var op = new L.Point(position.x, position.y);
+    L.DomUtil.setPosition(this._container, op); //この要素を地図上に配置
   },
 
   // ラベルの取得と設定
@@ -238,8 +201,7 @@ var buildLabelAnimation = function(){
   var args = arguments[0].slice(0),
       labels = [];
 
-  // ラベルアニメーション値を求める
-  var minutes = 0;
+  var minutes = 0; // ラベルアニメーション値を求める
 
   // 各停止位置を処理
   args.forEach(function(stop, idx){
@@ -248,28 +210,17 @@ var buildLabelAnimation = function(){
         // Labelオブジェクト作成
         var label = new L.Label(
           [stop.latitude, stop.longitude],
-          stop.stop,
-          {offset: new L.Point(stop.offset[0], stop.offset[1])}
+          stop.stop
         );
         map.addLayer(label);
-        // 到達時はshownとして追加
-        labels.push(
-          {minutes: minutes, label: label, status: "shown"}
-        );
-        // 通過後はdimmedとして追加
-        labels.push(
-          {minutes: minutes+25, label: label, status: "dimmed"}
-        );
-        // そして消える
-        labels.push(
-          {minutes: minutes+50, label: label, status: "hidden"}
-        );
+        labels.push( {minutes: minutes, label: label, status: "shown"} ); // 到達時
+        labels.push( {minutes: minutes+25, label: label, status: "dimmed"} ); // 通過後
+        labels.push( {minutes: minutes+50, label: label, status: "hidden"} ); //消える
       }
-      minutes += stop.duration;
+      minutes += 80;
   });
   // 配列を時間の順でソート
   labels.sort(function(a,b){return a.minutes - b.minutes;})
-
   return labels;
 }
 
@@ -280,8 +231,7 @@ var labels = buildLabelAnimation(seaboard);
 var start = seaboard[0];
 var label = new L.Label(
   [start.latitude, start.longitude],
-  start.stop,
-  {offset: new L.Point(start.offset[0], start.offset[1])}
+  start.stop
 );
 map.addLayer(label);
 label.setStatus("shown");
@@ -289,8 +239,7 @@ label.setStatus("shown");
 var finish = seaboard[seaboard.length-1];
 var label = new L.Label(
   [finish.latitude, finish.longitude],
-  finish.stop,
-  {offset: new L.Point(finish.offset[0], finish.offset[1])}
+  finish.stop
 );
 map.addLayer(label);
 label.setStatus("shown");
@@ -309,12 +258,10 @@ var step = 0;
 
 var animateStep = function() {
   // アニメーションの次のステップを描画する
-
   // 最初のステップじゃない時、先ほどのステップの線を消す
   if (step > 0 && step < maxPathSteps){
       map.removeLayer(routeAnimation[step-1]);
   }
-
   // 最後のステップの場合、最初に戻る
   if (step === maxSteps) {
     map.removeLayer(routeAnimation[maxPathSteps-1]);
@@ -370,7 +317,6 @@ var control = L.control.animate({
 });
 
 control.addTo(map);
-
 
 // タイトル追加
 L.Control.Title = L.Control.extend({
