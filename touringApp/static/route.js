@@ -1,22 +1,3 @@
-var seaboard = [
-    { "stop": "Washington",     "latitude": 38.895111, "longitude": -77.036667, "duration":  77, "offset": [-30,-10] },
-    { "stop": "Fredericksburg", "latitude": 38.301806, "longitude": -77.470833, "duration":  89, "offset": [  6,  4] },
-    { "stop": "Richmond",       "latitude": 37.533333, "longitude": -77.466667, "duration":  29, "offset": [  6,  4] },
-    { "stop": "Petersburg",     "latitude": 37.21295,  "longitude": -77.400417, "duration":  93, "offset": [  6,  4] },
-    { "stop": "Henderson",      "latitude": 36.324722, "longitude": -78.408611, "duration":  44, "offset": [  6,  4] },
-    { "stop": "Raleigh",        "latitude": 35.818889, "longitude": -78.644722, "duration": 116, "offset": [  6,  4] },
-    { "stop": "Hamlet",         "latitude": 34.888056, "longitude": -79.706111, "duration":  74, "offset": [  6,  6] },
-    { "stop": "Monroe",         "latitude": 34.988889, "longitude": -80.549722, "duration":  58, "offset": [  6, -8] },
-    { "stop": "Chester",        "latitude": 34.705556, "longitude": -81.211667, "duration":  54, "offset": [  6,  6] },
-    { "stop": "Clinton",        "latitude": 34.471389, "longitude": -81.875,    "duration":  34, "offset": [  6,  6] },
-    { "stop": "Greenwood",      "latitude": 34.189722, "longitude": -82.154722, "duration":  22, "offset": [ 10, -2] },
-    { "stop": "Abbeville",      "latitude": 34.178611, "longitude": -82.379167, "duration":  39, "offset": [  4, 10] },
-    { "stop": "Elberton",       "latitude": 34.109722, "longitude": -82.865556, "duration":  41, "offset": [  6, 10] },
-    { "stop": "Athens",         "latitude": 33.95,     "longitude": -83.383333, "duration":  75, "offset": [  6,  6] },
-    { "stop": "Emory",          "latitude": 33.791111, "longitude": -84.323333, "duration":  25, "offset": [ 10,  4] },
-    { "stop": "Atlanta",        "latitude": 33.755,    "longitude": -84.39,     "duration":   0, "offset": [-21, 10] }
-];
-
 var mapFirstX = Math.min.apply(null,seaboard.map(function(pass){ return pass['latitude']; }) ); - 1;
 var mapFirstY = Math.min.apply(null,seaboard.map(function(pass){ return pass['longitude']; }) ); - 1;
 var mapLastX = Math.max.apply(null,seaboard.map(function(pass){ return pass['latitude']; }) ); + 1;
@@ -136,10 +117,10 @@ var buildAnimation = function(route, options){
     var nextStop = route[stopIdx+1]
     prevStops.push([stop.latitude, stop.longitude]);
 
-    for (var minutes = 1; minutes <= 80; minutes++){
+    for (var minutes = 1; minutes <= 2; minutes++){
       var position = [
-        stop.latitude + (nextStop.latitude - stop.latitude) * (minutes/80),
-        stop.longitude + (nextStop.longitude - stop.longitude) * (minutes/80)
+        stop.latitude + (nextStop.latitude - stop.latitude) * (minutes/2),
+        stop.longitude + (nextStop.longitude - stop.longitude) * (minutes/2)
       ];
       animation.push(
         L.polyline(prevStops.concat([position]), options)
@@ -169,7 +150,7 @@ L.Label = L.Layer.extend({
     this._container.style.height = "0"; // そのdiv要素の高さを0にし、位置計算での不測事態回避
     this._container.style.opacity = "0"; // そのdiv要素のopacityを0にし、初期状態hiddenにあわせる
     map.getPanes().markerPane.appendChild(this._container); // この要素をmarkerPaneレイヤに追加・・・Paneがよくわからん
-    this._container.innerHTML = "<img src ='http://www.d3.dion.ne.jp/~tiyoko01/hyo/twin.jpg'>"; // 表示画像設定
+    this._container.innerHTML = "<img src ='http://xxxxx.jpg'>"; // 表示画像設定
     var position = map.latLngToLayerPoint(this._latlng); // 緯度経度からラベルの位置を計算し、オフセット調整
     var op = new L.Point(position.x, position.y);
     L.DomUtil.setPosition(this._container, op); //この要素を地図上に配置
@@ -214,10 +195,10 @@ var buildLabelAnimation = function(){
         );
         map.addLayer(label);
         labels.push( {minutes: minutes, label: label, status: "shown"} ); // 到達時
-        labels.push( {minutes: minutes+25, label: label, status: "dimmed"} ); // 通過後
-        labels.push( {minutes: minutes+50, label: label, status: "hidden"} ); //消える
+        labels.push( {minutes: minutes+1, label: label, status: "dimmed"} ); // 通過後
+        labels.push( {minutes: minutes+2, label: label, status: "hidden"} ); //消える
       }
-      minutes += 80;
+      minutes += 2;
   });
   // 配列を時間の順でソート
   labels.sort(function(a,b){return a.minutes - b.minutes;})

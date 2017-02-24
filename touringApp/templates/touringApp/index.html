@@ -12,11 +12,13 @@
 	</head>
 	<body>
 		<div id="map"></div>
+		<script>
+		var seaboard = [];
 		{% for pass in all %}
-			<script>
-				console.log({{ pass.latitude }});
-			</script>
+			var position = { "latitude": {{pass.latitude}}, "longitude": {{pass.longitude}} };
+			seaboard.push(position);
 		{% endfor %}
+		</script>
 		<script src="{% static 'route.js' %}"></script>
 	</body>
 </html>

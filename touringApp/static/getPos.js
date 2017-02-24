@@ -72,7 +72,8 @@ $(document).ready(function(){
     });
 		markers.push(marker);
 		//途中経路
-		if (points.length > 2){
+		if (points.length > 1){
+      waypts = [];
 			for (var i = 1; i < points.length-1; i++){
 				waypts.push({
 						location: new google.maps.LatLng(points[i][0],points[i][1]),
