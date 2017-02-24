@@ -244,15 +244,10 @@ var label = new L.Label(
 map.addLayer(label);
 label.setStatus("shown");
 
-// 線描写アニメのステップ総数を求める
-var maxPathSteps = routeAnimation.length;
-// ラベルのアニメーションが最後に起動するminutes
-var maxLabelSteps = labels[labels.length-1].minutes;
-// アニメーションステップのMax
-var maxSteps = Math.max(maxPathSteps, maxLabelSteps);
-// 元のデータを保持しつつ、アニメーション中の破棄を行う用に配列コピー
-var labelAnimation = labels.slice(0);
-console.log(labelAnimation);
+var maxPathSteps = routeAnimation.length; // 線描写アニメのステップ総数を求める
+var maxLabelSteps = labels[labels.length-1].minutes; // ラベルのアニメーションが最後に起動するminutes
+var maxSteps = Math.max(maxPathSteps, maxLabelSteps); // アニメーションステップのMax
+var labelAnimation = labels.slice(0); // 元のデータを保持しつつ、アニメーション中の破棄を行う用に配列コピー
 
 var step = 0;
 
@@ -277,8 +272,7 @@ var animateStep = function() {
   while (labelAnimation.length && step === labelAnimation[0].minutes){
     var label = labelAnimation[0].label;
     if (step < maxPathSteps || label.getStatus() === "shown"){
-      // ここでlabelのopacityを変更
-      label.setStatus(labelAnimation[0].status);
+      label.setStatus(labelAnimation[0].status); // ここでlabelのopacityを変更
     }
     labelAnimation.shift();
   }
@@ -288,12 +282,10 @@ var animateStep = function() {
       map.addLayer(routeAnimation[step]);
   }
 
-  // アニメーションの最後に達せばtrueを返す
-  return ++step === maxSteps;
+  return ++step === maxSteps;  // アニメーションの最後に達せばtrueを返す
 }
 
-// 上記のステップ関数を繰り返し実行
-var interval = null;
+var interval = null; // 上記のステップ関数を繰り返し実行
 
 var animate = function(){
   // アニメーションが最後に達していたらインターバルを削除し、コントロールリセット

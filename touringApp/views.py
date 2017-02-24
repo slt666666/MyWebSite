@@ -10,7 +10,7 @@ def index(request):
     PassSet = routePass[0].pass_set.all()
     print PassSet[0].latitude
     #return HttpResponse(routePass.route_name)
-    return render(request, 'touringApp/index.html')
+    return render(request, 'touringApp/index.html', { 'all':PassSet })
 
 
 def getGIS(request):
