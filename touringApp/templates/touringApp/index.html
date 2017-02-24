@@ -13,7 +13,9 @@
 	<body>
 		<div id="map"></div>
 		{% for pass in all %}
-			{{ pass.latitude }}
+			<script>
+				console.log({{ pass.latitude }});
+			</script>
 		{% endfor %}
 		<script src="{% static 'route.js' %}"></script>
 	</body>
