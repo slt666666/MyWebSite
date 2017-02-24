@@ -2,8 +2,8 @@
   cursor: default;
 }
 #map {
-  width: 840px;
-  height: 660px;
+  width: 600px;
+  height: 480px;
   margin: 40px auto;
   border: 1px solid #CECDD2;
 }

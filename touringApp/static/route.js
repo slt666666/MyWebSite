@@ -39,7 +39,7 @@ L.Control.Animate = L.Control.extend({
     animatePauseTitle: "Pause Animation",
     animateResumeText: "▶︎",
     animateResumeTitle: "Resume Animation",
-    animateStartFn: null,
+    animateStartFn: animate,
     animateStopFn: null
   },
 
@@ -51,8 +51,8 @@ L.Control.Animate = L.Control.extend({
 
     // div要素内にボタン要素を作成
     this._button = this._createButton(
-      this.options.animateStartText,
-      this.options.animateStartTitle,
+      this.options.animatePauseText,
+      this.options.animatePauseTitle,
       animateName,
       container,
       this._clicked);
@@ -77,7 +77,7 @@ L.Control.Animate = L.Control.extend({
     return link;
   },
 
-  _running: false,  //停止中から
+  _running: true,  //停止中から
 
   //状態変数に応じて状態を変化させる
   _clicked: function() {
@@ -120,10 +120,10 @@ var buildAnimation = function(route, options){
     var nextStop = route[stopIdx+1]
     prevStops.push([stop.latitude, stop.longitude]);
 
-    for (var minutes = 1; minutes <= 2; minutes++){
+    for (var minutes = 1; minutes <= 3; minutes++){
       var position = [
-        stop.latitude + (nextStop.latitude - stop.latitude) * (minutes/2),
-        stop.longitude + (nextStop.longitude - stop.longitude) * (minutes/2)
+        stop.latitude + (nextStop.latitude - stop.latitude) * (minutes/3),
+        stop.longitude + (nextStop.longitude - stop.longitude) * (minutes/3)
       ];
       animation.push(
         L.polyline(prevStops.concat([position]), options)
@@ -140,7 +140,6 @@ var routeAnimation = buildAnimation(seaboard,
 
 //ラベルオブジェクトを作成する
 L.Label = L.Layer.extend({
-
   // LeafletのClassのinitialize()メソッド拡張
   initialize: function(latLng, label, options){
     this._latlng = latLng;
@@ -153,7 +152,7 @@ L.Label = L.Layer.extend({
     this._container.style.height = "0"; // そのdiv要素の高さを0にし、位置計算での不測事態回避
     this._container.style.opacity = "0"; // そのdiv要素のopacityを0にし、初期状態hiddenにあわせる
     map.getPanes().markerPane.appendChild(this._container); // この要素をmarkerPaneレイヤに追加・・・Paneがよくわからん
-    this._container.innerHTML = "<img src ='http://xxxxx.jpg'>"; // 表示画像設定
+    //this._container.innerHTML = "<img src ='http://xxxxx.jpg'>"; // 表示画像設定
     var position = map.latLngToLayerPoint(this._latlng); // 緯度経度からラベルの位置を計算し、オフセット調整
     var op = new L.Point(position.x, position.y);
     L.DomUtil.setPosition(this._container, op); //この要素を地図上に配置
@@ -201,7 +200,7 @@ var buildLabelAnimation = function(){
         labels.push( {minutes: minutes+1, label: label, status: "dimmed"} ); // 通過後
         labels.push( {minutes: minutes+2, label: label, status: "hidden"} ); //消える
       }
-      minutes += 2;
+      minutes += 3;
   });
   // 配列を時間の順でソート
   labels.sort(function(a,b){return a.minutes - b.minutes;})
@@ -291,7 +290,6 @@ var control = L.control.animate({
   animateStartFn: animate,
   animateStopFn: pause
 });
-
 control.addTo(map);
 
 // タイトル追加
@@ -317,3 +315,4 @@ L.control.title = function(title, options){
 };
 
 L.control.title("route test").addTo(map);
+animate();
