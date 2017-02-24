@@ -7,7 +7,7 @@ import json
 # Create your views here.
 def index(request):
     routePass = Route.objects.all()
-    PassSet = routePass[1].pass_set.all()
+    PassSet = routePass[2].pass_set.all()
     return render(request, 'touringApp/index.html', { 'all':PassSet })
 
 

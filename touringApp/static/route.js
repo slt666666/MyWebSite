@@ -6,7 +6,7 @@ var mapLastY = Math.max.apply(null,seaboard.map(function(pass){ return pass['lon
 var map = L.map("map", {
   center: [(mapFirstX+mapLastX)/2, (mapFirstY+mapLastY)/2],
   maxBounds: [ [mapFirstX, mapFirstY], [mapLastX, mapLastY] ],
-  zoom: 7, minZoom: 7, maxZoom: 7,
+  zoom: 6, minZoom: 6, maxZoom: 6,
   dragging: false, zoomControl: false, touchZoom: false,
   scrollWheelZoom: false, doubleClickZoom: false,
   boxZoom: false, keyboard: false
