@@ -6,11 +6,14 @@ var mapLastY = Math.max.apply(null,seaboard.map(function(pass){ return pass['lon
 var map = L.map("map", {
   center: [(mapFirstX+mapLastX)/2, (mapFirstY+mapLastY)/2],
   maxBounds: [ [mapFirstX, mapFirstY], [mapLastX, mapLastY] ],
-  zoom: 6, minZoom: 6, maxZoom: 6,
   dragging: false, zoomControl: false, touchZoom: false,
   scrollWheelZoom: false, doubleClickZoom: false,
   boxZoom: false, keyboard: false
 });
+var bounds = L.latLngBounds([(mapFirstX+mapLastX)/2, (mapFirstY+mapLastY)/2]);
+   bounds.extend([mapFirstX, mapFirstY]);
+   bounds.extend([mapLastX, mapLastY]);
+   map.fitBounds(bounds);
 
 // http://leaflet-extras.github.io/leaflet-providers/preview/ 参照
 L.tileLayer("http://server.arcgisonline.com/ArcGIS/rest/services/"+
@@ -313,4 +316,4 @@ L.control.title = function(title, options){
   return new L.Control.Title(title, options);
 };
 
-L.control.title("Geography as a Competitive Advantage").addTo(map);
+L.control.title("route test").addTo(map);
