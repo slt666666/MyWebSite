@@ -120,10 +120,10 @@ var buildAnimation = function(route, options){
     var nextStop = route[stopIdx+1]
     prevStops.push([stop.latitude, stop.longitude]);
 
-    for (var minutes = 1; minutes <= 3; minutes++){
+    for (var minutes = 1; minutes <= 10; minutes++){
       var position = [
-        stop.latitude + (nextStop.latitude - stop.latitude) * (minutes/3),
-        stop.longitude + (nextStop.longitude - stop.longitude) * (minutes/3)
+        stop.latitude + (nextStop.latitude - stop.latitude) * (minutes/10),
+        stop.longitude + (nextStop.longitude - stop.longitude) * (minutes/10)
       ];
       animation.push(
         L.polyline(prevStops.concat([position]), options)
@@ -133,11 +133,11 @@ var buildAnimation = function(route, options){
   return animation;
 }
 
-// 路線を格納する配列
+// アニメ線を格納する配列
 var routeAnimation = buildAnimation(seaboard,
     {clickable: false, color: "#88020B", weight: 8, opacity: 1.0}
   );
-
+console.log(routeAnimation.length);
 //ラベルオブジェクトを作成する
 L.Label = L.Layer.extend({
   // LeafletのClassのinitialize()メソッド拡張
@@ -152,7 +152,7 @@ L.Label = L.Layer.extend({
     this._container.style.height = "0"; // そのdiv要素の高さを0にし、位置計算での不測事態回避
     this._container.style.opacity = "0"; // そのdiv要素のopacityを0にし、初期状態hiddenにあわせる
     map.getPanes().markerPane.appendChild(this._container); // この要素をmarkerPaneレイヤに追加・・・Paneがよくわからん
-    //this._container.innerHTML = "<img src ='http://xxxxx.jpg'>"; // 表示画像設定
+    this._container.innerHTML = "<img src ='http://xxxxx.jpg'>"; // 表示画像設定
     var position = map.latLngToLayerPoint(this._latlng); // 緯度経度からラベルの位置を計算し、オフセット調整
     var op = new L.Point(position.x, position.y);
     L.DomUtil.setPosition(this._container, op); //この要素を地図上に配置
@@ -197,10 +197,10 @@ var buildLabelAnimation = function(){
         );
         map.addLayer(label);
         labels.push( {minutes: minutes, label: label, status: "shown"} ); // 到達時
-        labels.push( {minutes: minutes+1, label: label, status: "dimmed"} ); // 通過後
-        labels.push( {minutes: minutes+2, label: label, status: "hidden"} ); //消える
+        //labels.push( {minutes: minutes+5, label: label, status: "dimmed"} ); // 通過後
+        labels.push( {minutes: minutes+10, label: label, status: "hidden"} ); //消える
       }
-      minutes += 3;
+      minutes += 10;
   });
   // 配列を時間の順でソート
   labels.sort(function(a,b){return a.minutes - b.minutes;})
@@ -277,7 +277,7 @@ var animate = function(){
       window.clearInterval(interval);
       control.reset();
     }
-  }, 30);
+  }, 9);
 }
 
 // インターバルを停止する
