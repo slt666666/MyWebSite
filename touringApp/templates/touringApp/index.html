@@ -14,9 +14,13 @@
 		<div id="map"></div>
 		<script>
 		var seaboard = [];
-		{% for pass in all %}
-			var position = { "latitude": {{pass.latitude}}, "longitude": {{pass.longitude}} };
-			seaboard.push(position);
+		{% for allRoute in all %}
+			{% for pass in allRoute %}
+				var x = {{ pass.latitude }};
+				console.log(x);
+				var position = { "latitude": {{pass.latitude}}, "longitude": {{pass.longitude}} };
+				seaboard.push(position);
+			{% endfor %}
 		{% endfor %}
 		</script>
 		<script src="{% static 'route.js' %}"></script>
