@@ -1,4 +1,11 @@
-seaboard = seaboard[1];
+var seaboard = []
+
+for (var i = 0; i < allPass.length; i++) {
+  Array.prototype.push.apply(seaboard, allPass[i]);
+}
+
+//var seaboard = allPass[1];
+
 var mapFirstX = Math.min.apply(null,seaboard.map(function(pass){ return pass['latitude']; }) ); - 1;
 var mapFirstY = Math.min.apply(null,seaboard.map(function(pass){ return pass['longitude']; }) ); - 1;
 var mapLastX = Math.max.apply(null,seaboard.map(function(pass){ return pass['latitude']; }) ); + 1;
@@ -24,10 +31,12 @@ L.tileLayer("http://server.arcgisonline.com/ArcGIS/rest/services/"+
 }).addTo(map);
 
 //各地点の緯度経度を結び路線を表示
-L.polyline(
-  seaboard.map(function(stop){return [stop.latitude, stop.longitude]}),
-  {color: "#106624", weight: 1, clickable: false}
-).addTo(map);
+for (var i = 0; i < allPass.length; i++) {
+  L.polyline(
+    allPass[i].map(function(stop){return [stop.latitude, stop.longitude]}),
+    {color: "#106624", weight: 1, clickable: false}
+  ).addTo(map);
+};
 
 // アニメーションコントロール
 L.Control.Animate = L.Control.extend({

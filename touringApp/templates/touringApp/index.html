@@ -13,14 +13,14 @@
 	<body>
 		<div id="map"></div>
 		<script>
-		var seaboard = [];
+		var allPass = [];
 		{% for allRoute in all %}
 			var positionSet = []
 			{% for pass in allRoute %}
 				var position = { "latitude": {{pass.latitude}}, "longitude": {{pass.longitude}} };
 				positionSet.push(position);
 			{% endfor %}
-			seaboard.push(positionSet);
+			allPass.push(positionSet);
 		{% endfor %}
 		</script>
 		<script src="{% static 'route.js' %}"></script>
