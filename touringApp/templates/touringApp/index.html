@@ -15,12 +15,12 @@
 		<script>
 		var seaboard = [];
 		{% for allRoute in all %}
+			var positionSet = []
 			{% for pass in allRoute %}
-				var x = {{ pass.latitude }};
-				console.log(x);
 				var position = { "latitude": {{pass.latitude}}, "longitude": {{pass.longitude}} };
-				seaboard.push(position);
+				positionSet.push(position);
 			{% endfor %}
+			seaboard.push(positionSet);
 		{% endfor %}
 		</script>
 		<script src="{% static 'route.js' %}"></script>

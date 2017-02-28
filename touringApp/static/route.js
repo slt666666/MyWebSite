@@ -1,3 +1,4 @@
+seaboard = seaboard[1];
 var mapFirstX = Math.min.apply(null,seaboard.map(function(pass){ return pass['latitude']; }) ); - 1;
 var mapFirstY = Math.min.apply(null,seaboard.map(function(pass){ return pass['longitude']; }) ); - 1;
 var mapLastX = Math.max.apply(null,seaboard.map(function(pass){ return pass['latitude']; }) ); + 1;
