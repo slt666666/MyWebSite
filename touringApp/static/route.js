@@ -1,10 +1,10 @@
 var seaboard = []
 
 for (var i = 0; i < allPass.length; i++) {
-  Array.prototype.push.apply(seaboard, allPass[i]);
+  if (i != 1) {
+    Array.prototype.push.apply(seaboard, allPass[i]);
+  }
 }
-
-//var seaboard = allPass[1];
 
 var mapFirstX = Math.min.apply(null,seaboard.map(function(pass){ return pass['latitude']; }) ); - 1;
 var mapFirstY = Math.min.apply(null,seaboard.map(function(pass){ return pass['longitude']; }) ); - 1;
@@ -34,7 +34,7 @@ L.tileLayer("http://server.arcgisonline.com/ArcGIS/rest/services/"+
 for (var i = 0; i < allPass.length; i++) {
   L.polyline(
     allPass[i].map(function(stop){return [stop.latitude, stop.longitude]}),
-    {color: "#106624", weight: 1, clickable: false}
+    {color: "#106624", weight: 8, clickable: false}
   ).addTo(map);
 };
 
@@ -162,7 +162,8 @@ L.Label = L.Layer.extend({
     this._container.style.height = "0"; // そのdiv要素の高さを0にし、位置計算での不測事態回避
     this._container.style.opacity = "0"; // そのdiv要素のopacityを0にし、初期状態hiddenにあわせる
     map.getPanes().markerPane.appendChild(this._container); // この要素をmarkerPaneレイヤに追加・・・Paneがよくわからん
-    this._container.innerHTML = "<img src ='http://xxxxx.jpg'>"; // 表示画像設定
+    //this._container.innerHTML = "<img src ='http://xxxxx.jpg'>"; // 表示画像設定
+    this._container.innerHTML = "<a href=http://yahoo.co.jp>click!</a>"; // 表示画像設定
     var position = map.latLngToLayerPoint(this._latlng); // 緯度経度からラベルの位置を計算し、オフセット調整
     var op = new L.Point(position.x, position.y);
     L.DomUtil.setPosition(this._container, op); //この要素を地図上に配置
@@ -219,23 +220,6 @@ var buildLabelAnimation = function(){
 
 // 線をラベル化
 var labels = buildLabelAnimation(seaboard);
-
-//最初と最後は最初から表示
-var start = seaboard[0];
-var label = new L.Label(
-  [start.latitude, start.longitude],
-  start.stop
-);
-map.addLayer(label);
-label.setStatus("shown");
-
-var finish = seaboard[seaboard.length-1];
-var label = new L.Label(
-  [finish.latitude, finish.longitude],
-  finish.stop
-);
-map.addLayer(label);
-label.setStatus("shown");
 
 var maxPathSteps = routeAnimation.length; // 線描写アニメのステップ総数を求める
 var maxLabelSteps = labels[labels.length-1].minutes; // ラベルのアニメーションが最後に起動するminutes
