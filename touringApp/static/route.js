@@ -34,7 +34,7 @@ L.tileLayer("http://server.arcgisonline.com/ArcGIS/rest/services/"+
 for (var i = 0; i < allPass.length; i++) {
   L.polyline(
     allPass[i].map(function(stop){return [stop.latitude, stop.longitude]}),
-    {color: "#106624", weight: 8, clickable: false}
+    {color: "blue", weight: 4, clickable: false}
   ).addTo(map);
 };
 
@@ -130,10 +130,10 @@ var buildAnimation = function(route, options){
     var nextStop = route[stopIdx+1]
     prevStops.push([stop.latitude, stop.longitude]);
 
-    for (var minutes = 1; minutes <= 10; minutes++){
+    for (var minutes = 1; minutes <= 2; minutes++){
       var position = [
-        stop.latitude + (nextStop.latitude - stop.latitude) * (minutes/10),
-        stop.longitude + (nextStop.longitude - stop.longitude) * (minutes/10)
+        stop.latitude + (nextStop.latitude - stop.latitude) * (minutes/2),
+        stop.longitude + (nextStop.longitude - stop.longitude) * (minutes/2)
       ];
       animation.push(
         L.polyline(prevStops.concat([position]), options)
@@ -144,16 +144,19 @@ var buildAnimation = function(route, options){
 }
 
 // アニメ線を格納する配列
-var routeAnimation = buildAnimation(seaboard,
+var routeAnimations = [];
+for (var i = 0; i < allPass.length; i++) {
+  var animation = buildAnimation(allPass[i],
     {clickable: false, color: "#88020B", weight: 8, opacity: 1.0}
   );
-console.log(routeAnimation.length);
+  routeAnimations.push(animation);
+};
 //ラベルオブジェクトを作成する
 L.Label = L.Layer.extend({
   // LeafletのClassのinitialize()メソッド拡張
   initialize: function(latLng, label, options){
     this._latlng = latLng;
-    this._label = label;
+    this._label = label; // ここにリンク先をはると良いかな？<a>のサイズ要変更
     this._status = "hidden";
   },
 
@@ -163,7 +166,7 @@ L.Label = L.Layer.extend({
     this._container.style.opacity = "0"; // そのdiv要素のopacityを0にし、初期状態hiddenにあわせる
     map.getPanes().markerPane.appendChild(this._container); // この要素をmarkerPaneレイヤに追加・・・Paneがよくわからん
     //this._container.innerHTML = "<img src ='http://xxxxx.jpg'>"; // 表示画像設定
-    this._container.innerHTML = "<a href=http://yahoo.co.jp>click!</a>"; // 表示画像設定
+    this._container.innerHTML = "<a>●</a>"; // 表示画像設定
     var position = map.latLngToLayerPoint(this._latlng); // 緯度経度からラベルの位置を計算し、オフセット調整
     var op = new L.Point(position.x, position.y);
     L.DomUtil.setPosition(this._container, op); //この要素を地図上に配置
@@ -191,27 +194,27 @@ L.Label = L.Layer.extend({
   }
 });
 
-var buildLabelAnimation = function(){
-  var args = arguments[0].slice(0),
-      labels = [];
+var buildLabelAnimation = function(allPass){
+  var labels = [];
+  allPass.forEach(function(route){
+    var minutes = 0; // ラベルアニメーション値を求める
 
-  var minutes = 0; // ラベルアニメーション値を求める
-
-  // 各停止位置を処理
-  args.forEach(function(stop, idx){
-      //最初か最後にはラベルはアニメーションしない
-      if (idx !== 0 && idx < args.length-1){
-        // Labelオブジェクト作成
-        var label = new L.Label(
-          [stop.latitude, stop.longitude],
-          stop.stop
-        );
-        map.addLayer(label);
-        labels.push( {minutes: minutes, label: label, status: "shown"} ); // 到達時
-        //labels.push( {minutes: minutes+5, label: label, status: "dimmed"} ); // 通過後
-        labels.push( {minutes: minutes+10, label: label, status: "hidden"} ); //消える
-      }
-      minutes += 10;
+    // 各停止位置を処理
+    route.forEach(function(stop, idx){
+        //最初か最後にはラベルはアニメーションしない
+        if (idx !== 0 && idx < route.length-1){
+          // Labelオブジェクト作成
+          var label = new L.Label(
+            [stop.latitude, stop.longitude],
+            stop.stop
+          );
+          map.addLayer(label);
+          labels.push( {minutes: minutes, label: label, status: "shown"} ); // 到達時
+          //labels.push( {minutes: minutes+5, label: label, status: "dimmed"} ); // 通過後
+          labels.push( {minutes: minutes+2, label: label, status: "hidden"} ); //消える
+        }
+        minutes += 2;
+    });
   });
   // 配列を時間の順でソート
   labels.sort(function(a,b){return a.minutes - b.minutes;})
@@ -219,9 +222,13 @@ var buildLabelAnimation = function(){
 }
 
 // 線をラベル化
-var labels = buildLabelAnimation(seaboard);
-
-var maxPathSteps = routeAnimation.length; // 線描写アニメのステップ総数を求める
+var labels = buildLabelAnimation(allPass);
+console.log(allPass);
+var maxPathSteps = Math.max.apply(null,   // 線描写アニメのステップ総数を求める
+  routeAnimations.map(function(animation){
+    return animation.length;
+  })
+);
 var maxLabelSteps = labels[labels.length-1].minutes; // ラベルのアニメーションが最後に起動するminutes
 var maxSteps = Math.max(maxPathSteps, maxLabelSteps); // アニメーションステップのMax
 var labelAnimation = labels.slice(0); // 元のデータを保持しつつ、アニメーション中の破棄を行う用に配列コピー
@@ -232,12 +239,17 @@ var animateStep = function() {
   // アニメーションの次のステップを描画する
   // 最初のステップじゃない時、先ほどのステップの線を消す
   if (step > 0 && step < maxPathSteps){
-      map.removeLayer(routeAnimation[step-1]);
+    routeAnimations.forEach(function(animation){
+      if (animation.length > step) {
+        map.removeLayer(animation[step-1]);
+      };
+    });
   }
   // 最後のステップの場合、最初に戻る
   if (step === maxSteps) {
-    map.removeLayer(routeAnimation[maxPathSteps-1]);
-
+    routeAnimations.forEach(function(animation){
+      map.removeLayer(animation[animation.length-1]);
+    });
     labelAnimation = labels.slice(0);
     labelAnimation.forEach(function(label){
       label.label.setStatus("hidden");
@@ -256,7 +268,11 @@ var animateStep = function() {
 
   // 現在のステップの線を描く
   if (step < maxPathSteps){
-      map.addLayer(routeAnimation[step]);
+    routeAnimations.forEach(function(animation){
+      if (animation.length > step) {
+        map.addLayer(animation[step]);
+      };
+    });
   }
 
   return ++step === maxSteps;  // アニメーションの最後に達せばtrueを返す
@@ -271,7 +287,7 @@ var animate = function(){
       window.clearInterval(interval);
       control.reset();
     }
-  }, 9);
+  }, 1);
 }
 
 // インターバルを停止する

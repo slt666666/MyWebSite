@@ -17,7 +17,7 @@
 		{% for allRoute in all %}
 			var positionSet = []
 			{% for pass in allRoute %}
-				var position = { "latitude": {{pass.latitude}}, "longitude": {{pass.longitude}} };
+				var position = { "id":{{pass.id}}, "latitude": {{pass.latitude}}, "longitude": {{pass.longitude}} };
 				positionSet.push(position);
 			{% endfor %}
 			allPass.push(positionSet);
