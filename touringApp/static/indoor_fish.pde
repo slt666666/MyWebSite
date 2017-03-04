@@ -3,20 +3,8 @@ pathfinder[] paths;
 int width;
 int height;
 // 計算処理向上のため先に計算しておく
-float cos1_6 = cos(PI/6);
-float sin1_6 = sin(PI/6);
-float cos1_3 = cos(PI/3);
-float sin1_3 = sin(PI/3);
-float cos1_2 = cos(PI/2);
-float sin1_2 = sin(PI/2);
-float cos2_3 = cos(PI*2/3);
-float sin2_3 = sin(PI*2/3);
-float cos3_5 = cos(PI*3/5);
-float sin3_5 = sin(PI*3/5);
-float cos9_10 = cos(PI*9/10);
-float sin9_10 = sin(PI*9/10);
-float cos13_10 = cos(PI*13/10);
-float sin13_10 = sin(PI*13/10);
+float cos1_6 = cos(PI/6) ,sin1_6 = sin(PI/6), cos1_3 = cos(PI/3), sin1_3 = sin(PI/3), cos1_2 = cos(PI/2), sin1_2 = sin(PI/2), cos2_3 = cos(PI*2/3), sin2_3 = sin(PI*2/3)
+    , cos3_5 = cos(PI*3/5), sin3_5 = sin(PI*3/5), cos9_10 = cos(PI*9/10), sin9_10 = sin(PI*9/10), cos13_10 = cos(PI*13/10), sin13_10 = sin(PI*13/10);
 
 void setup(){
   width = innerWidth;
@@ -73,7 +61,7 @@ $(function(){
 });
 
 void mousePressed(){
-   fishes.addFish(2);
+   fishes.addFish(3);
 }
 
 class Ball {
@@ -95,7 +83,6 @@ class Ball {
     position.x += dx;
     position.y += dy;
 
-
     if ( position.x > width || position.x < 0 ) dx = -dx;
   }
 
@@ -116,7 +103,7 @@ class BodyParts {
     position = new PVector(x,y);
     velocity = new PVector(0,0);
     colNum = col;
-    topspeed = 3;
+    topspeed = 4;
   }
 
   void update(BodyParts target) {
@@ -124,7 +111,7 @@ class BodyParts {
     velocity = PVector.sub(target.position, position);
     float distance = velocity.mag();
     velocity.normalize();
-    if (distance < 12){
+    if (distance < 15){
       velocity.mult(map(distance,0,100,0,topspeed));
     }else{
       velocity.mult(topspeed);
@@ -268,7 +255,6 @@ class fishHead extends Head{
     endShape(CLOSE);
     //目
     stroke(0);
-    strokeWeight(2);
     fill(0);
     ellipse(0,0,4*reductionRate,4);
     popMatrix();
