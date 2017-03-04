@@ -17,10 +17,13 @@
 		</div>
     <a class="iframe" href="http://127.0.0.1:8000/touringApp/showRoute/" title="showRoute">ここをclick</a>
 		<script>
+
+    // canvasサイズを画面に合わせる
     function sizing(){
     	$("#main").attr({height:$("#wrapper").height()});
     	$("#main").attr({width:$("#wrapper").width()});
     }
+    // colorBox設定
     $(document).ready(function(){
       $(".iframe").colorbox({iframe:true, width:"80%", height:"80%"});
     });
