@@ -34,6 +34,10 @@ void draw() {
   }
 }
 
+$('#test').click(function(){
+  noLoop();
+});
+
 void mousePressed(){
    fishes.addFish(2);
 }

@@ -16,14 +16,9 @@
       <canvas id="main" data-processing-sources="{% static 'indoor_fish.pde' %}"></canvas>
 		</div>
 		<div id="map"></div>
-		<button id="test">test</button>
+		<div id="button"></div>
 		<script>
     $(function () {
-    	sizing();
-    	$(window).resize(function() {
-    		sizing();
-    	});
-
 			$('#test').click(function(){
 				$('canvas').remove();
 				$('#wrapper').html("<img width='335' height='201' src={% static 'shadeFoxSample.png' %} >");
@@ -46,5 +41,10 @@
 		{% endfor %}
 		</script>
 		<script src="{% static 'route.js' %}"></script>
+		<script>
+			$(function() {
+				$('#button').html("<button id='test'>test</button>");
+			})
+		</script>
 	</body>
 </html>
