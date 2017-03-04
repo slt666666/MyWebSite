@@ -2,13 +2,14 @@
   cursor: default;
 }
 #map {
-  width: 600px;
-  height: 480px;
+  width: 50%;
+  height: 80%;
   margin: 40px auto;
   border: 1px solid #CECDD2;
 }
-body{
+html, body{
   background-color: black;
+  height: 100%;
 }
 #fox {
   width: 335;
