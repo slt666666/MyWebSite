@@ -73,7 +73,7 @@ class Ball {
   Ball(){
     position = new PVector(width/2, 0);
     dx = random(-6,6);
-    dy = random(0.5,2);
+    dy = random(1,2);
   }
 
   void move(){
@@ -103,7 +103,7 @@ class BodyParts {
     position = new PVector(x,y);
     velocity = new PVector(0,0);
     colNum = col;
-    topspeed = 4;
+    topspeed = 3;
   }
 
   void update(BodyParts target) {
@@ -359,7 +359,7 @@ class Head extends BodyParts{
     if (count > 0){
       sum.div(count);
       sum.normalize();
-      sum.mult(0.2);
+      sum.mult(0.6);
     }
     return sum;
   }
