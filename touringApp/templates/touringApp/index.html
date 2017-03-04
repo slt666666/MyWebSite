@@ -7,12 +7,28 @@
 		<meta charset="utf-8">
     {% leaflet_js %}
     {% leaflet_css %}
-		<link rel="stylesheet" href="{% static 'sample.css' %}">
+    <link rel="stylesheet" href="{% static 'sample.css' %}">
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/processing.js/1.6.5/processing.js"></script>
 	</head>
 	<body>
+    <div id="wrapper">
+      <canvas id="main" data-processing-sources="{% static 'indoor_fish.pde' %}"></canvas>
+		</div>
 		<div id="map"></div>
 		<script>
+    $(function () {
+    	sizing();
+    	$(window).resize(function() {
+    		sizing();
+    	});
+    });
+
+    function sizing(){
+    	$("#main").attr({height:$("#wrapper").height()});
+    	$("#main").attr({width:$("#wrapper").width()});
+    }
+
 		var allPass = [];
 		{% for allRoute in all %}
 			var positionSet = []

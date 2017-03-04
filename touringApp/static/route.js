@@ -1,7 +1,7 @@
 var seaboard = []
 
 for (var i = 0; i < allPass.length; i++) {
-  if (i != 1) {
+  if (i != 1 && i != 5) {
     Array.prototype.push.apply(seaboard, allPass[i]);
   }
 }
@@ -24,17 +24,23 @@ var bounds = L.latLngBounds([(mapFirstX+mapLastX)/2, (mapFirstY+mapLastY)/2]);
    map.fitBounds(bounds);
 
 // http://leaflet-extras.github.io/leaflet-providers/preview/ 参照
-L.tileLayer("http://server.arcgisonline.com/ArcGIS/rest/services/"+
-            "Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}", {
-            attribution: "Tiles &copy; Esri &mdash; Esri, Delorme, NAVTEQ",
-            maxZom: 16
-}).addTo(map);
+L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
+	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+	subdomains: 'abcd',
+	maxZoom: 19}).addTo(map);
+  // これもいい
+  // L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+  // 	attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+  // }).addTo(map);
+  // L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+  // 	attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012'
+  // }).addTo(map);
 
 //各地点の緯度経度を結び路線を表示
 for (var i = 0; i < allPass.length; i++) {
   L.polyline(
     allPass[i].map(function(stop){return [stop.latitude, stop.longitude]}),
-    {color: "blue", weight: 4, clickable: false}
+    {color: "orange", weight: 4, clickable: false}
   ).addTo(map);
 };
 
@@ -147,7 +153,7 @@ var buildAnimation = function(route, options){
 var routeAnimations = [];
 for (var i = 0; i < allPass.length; i++) {
   var animation = buildAnimation(allPass[i],
-    {clickable: false, color: "#88020B", weight: 8, opacity: 1.0}
+    {clickable: false, color: "red", weight: 8, opacity: 1.0}
   );
   routeAnimations.push(animation);
 };
@@ -223,7 +229,6 @@ var buildLabelAnimation = function(allPass){
 
 // 線をラベル化
 var labels = buildLabelAnimation(allPass);
-console.log(allPass);
 var maxPathSteps = Math.max.apply(null,   // 線描写アニメのステップ総数を求める
   routeAnimations.map(function(animation){
     return animation.length;

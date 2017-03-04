@@ -1,9 +1,23 @@
+
 .leaflet-container {
   cursor: default;
 }
 #map {
   width: 600px;
   height: 480px;
-  margin: 40px auto;
+  margin: 0px 0px 0px 40px;
   border: 1px solid #CECDD2;
+}
+body{
+	margin: 0px;
+	padding: 0px;
+	position: relative;
+}
+#wrapper{
+	width: 100%;
+	height: 100%;
+	position: fixed;
+}
+*:focus{
+  outline:none;
 }
