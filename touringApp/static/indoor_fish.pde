@@ -1,8 +1,12 @@
 Flock fishes;
 pathfinder[] paths;
+Int width;
+Int height;
 
 void setup(){
-  size(innerWidth,innerHeight);
+  width = innerWidth;
+  height = innerHeight;
+  size(width,height);
   background(0);
   fishes = new Flock(3,0);
   paths = new pathfinder[1];
@@ -13,7 +17,7 @@ void draw() {
 
   fill(0,0,0,8);
   stroke(0);
-  rect(0,0,innerWidth,innerHeight);
+  rect(0,0,width,height);
   fishes.deadCheck();
   fishes.update();
   fishes.display();
@@ -47,7 +51,8 @@ $(function(){
     }
     timer = setTimeout(function() {
     //リロードする
-    location.reload();
+    width = innerWidth;
+    height = innerHeight;
     }, 200);
   });
 });
