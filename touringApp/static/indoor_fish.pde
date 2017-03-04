@@ -1,7 +1,22 @@
 Flock fishes;
 pathfinder[] paths;
-Int width;
-Int height;
+int width;
+int height;
+// 計算処理向上のため先に計算しておく
+float cos1_6 = cos(PI/6);
+float sin1_6 = sin(PI/6);
+float cos1_3 = cos(PI/3);
+float sin1_3 = sin(PI/3);
+float cos1_2 = cos(PI/2);
+float sin1_2 = sin(PI/2);
+float cos2_3 = cos(PI*2/3);
+float sin2_3 = sin(PI*2/3);
+float cos3_5 = cos(PI*3/5);
+float sin3_5 = sin(PI*3/5);
+float cos9_10 = cos(PI*9/10);
+float sin9_10 = sin(PI*9/10);
+float cos13_10 = cos(PI*13/10);
+float sin13_10 = sin(PI*13/10);
 
 void setup(){
   width = innerWidth;
@@ -216,6 +231,8 @@ class fishHead extends Head{
 
   void display() {
     angle = atan2(-velocity.y,velocity.x);
+    float cosA = cos(angle);
+    float sinA = sin(angle);
     reductionRate = map(abs(velocity.x),0,topspeed,0,1);
     stroke(0,colNum,255);
     strokeWeight(2);
@@ -225,18 +242,28 @@ class fishHead extends Head{
     beginShape();
     //右向き
     if(angle <= PI/2 && angle >= -PI/2){
-      vertex(16*cos(angle-PI/6)*reductionRate,-16*sin(angle-PI/6));
-      vertex(6*cos(angle-PI*5/6)*reductionRate,-6*sin(angle-PI*5/6));
-      vertex(12*cos(angle+PI*2/3)*reductionRate,-12*sin(angle+PI*2/3));
-      vertex(20*cos(angle+PI*2/3)*reductionRate,-20*sin(angle+PI*2/3));
-      vertex(12*cos(angle+PI/3)*reductionRate,-12*sin(angle+PI/3));
+      vertex(16*(cosA*cos1_6 + sinA*sin1_6)*reductionRate,
+            -16*(sinA*cos1_6 - cosA*sin1_6));
+      vertex(6*(cosA*-cos1_6 + sinA*sin1_6)*reductionRate,
+            -6*(sinA*cos1_6 - cosA*sin1_6));
+      vertex(12*(cosA*cos2_3 - sinA*sin2_3)*reductionRate,
+            -12*(sinA*cos2_3 + cosA*sin2_3));
+      vertex(20*(cosA*cos2_3 - sinA*sin2_3)*reductionRate,
+            -20*(sinA*cos2_3 + cosA*sin2_3));
+      vertex(12*(cosA*cos1_3 - sinA*sin1_3)*reductionRate,
+            -12*(sinA*cos1_3 + cosA*sin1_3));
     }else{
     //左向き
-      vertex(16*cos(angle+PI/6)*reductionRate,-16*sin(angle+PI/6));
-      vertex(6*cos(angle+PI*5/6)*reductionRate,-6*sin(angle+PI*5/6));
-      vertex(12*cos(angle-PI*2/3)*reductionRate,-12*sin(angle-PI*2/3));
-      vertex(20*cos(angle-PI*2/3)*reductionRate,-20*sin(angle-PI*2/3));
-      vertex(12*cos(angle-PI/3)*reductionRate,-12*sin(angle-PI/3));
+      vertex(16*(cosA*cos1_6 - sinA*sin1_6)*reductionRate,
+            -16*(sinA*cos1_6 + cosA*sin1_6));
+      vertex(6*(cosA*-cos1_6 - sinA*sin1_6)*reductionRate,
+            -6*(sinA*cos1_6 + cosA*sin1_6));
+      vertex(12*(cosA*cos2_3 + sinA*sin2_3)*reductionRate,
+            -12*(sinA*cos2_3 - cosA*sin2_3));
+      vertex(20*(cosA*cos2_3 + sinA*sin2_3)*reductionRate,
+            -20*(sinA*cos2_3 - cosA*sin2_3));
+      vertex(12*(cosA*cos1_3 + sinA*sin1_3)*reductionRate,
+            -12*(sinA*cos1_3 - cosA*sin1_3));
     }
     endShape(CLOSE);
     //目
@@ -356,32 +383,6 @@ class Head extends BodyParts{
     reductionRate = map(abs(velocity.x),0,topspeed,0,1);
     stroke(255,colNum,0);
     strokeWeight(2);
-    pushMatrix();
-    translate(position.x, position.y);
-    fill(255,colNum,0);
-    beginShape();
-    //右向き
-    if(angle <= PI/2 && angle >= -PI/2){
-      vertex(16*cos(angle-PI/6)*reductionRate,-16*sin(angle-PI/6));
-      vertex(6*cos(angle-PI*5/6)*reductionRate,-6*sin(angle-PI*5/6));
-      vertex(12*cos(angle+PI*2/3)*reductionRate,-12*sin(angle+PI*2/3));
-      vertex(20*cos(angle+PI*2/3)*reductionRate,-20*sin(angle+PI*2/3));
-      vertex(12*cos(angle+PI/3)*reductionRate,-12*sin(angle+PI/3));
-    }else{
-    //左向き
-      vertex(16*cos(angle+PI/6)*reductionRate,-16*sin(angle+PI/6));
-      vertex(6*cos(angle+PI*5/6)*reductionRate,-6*sin(angle+PI*5/6));
-      vertex(12*cos(angle-PI*2/3)*reductionRate,-12*sin(angle-PI*2/3));
-      vertex(20*cos(angle-PI*2/3)*reductionRate,-20*sin(angle-PI*2/3));
-      vertex(12*cos(angle-PI/3)*reductionRate,-12*sin(angle-PI/3));
-    }
-    endShape(CLOSE);
-    //目
-    stroke(0);
-    strokeWeight(2);
-    fill(0);
-    ellipse(0,0,4*reductionRate,4);
-    popMatrix();
   }
 
 }
@@ -393,28 +394,44 @@ class Middle extends BodyParts {
 
   void display() {
     super.display();
+    float cosA = cos(angle);
+    float sinA = sin(angle);
+
     pushMatrix();
     translate(position.x, position.y);
     beginShape();
     if(angle <= PI/2 && angle >= -PI/2){
-      vertex(8*cos(angle)*reductionRate,-8*sin(angle));
-      vertex(18*cos(angle+PI*3/5)*reductionRate,-18*sin(angle+PI*3/5));
-      vertex(8*cos(angle+PI/2)*reductionRate,-8*sin(angle+PI/2));
-      vertex(12*cos(angle+PI*9/10)*reductionRate,-12*sin(angle+PI*9/10));
-      vertex(8*cos(angle+PI*7/6)*reductionRate,-8*sin(angle+PI*7/6));
-      vertex(12*cos(angle+PI*13/10)*reductionRate,-12*sin(angle+PI*13/10));
-      vertex(8*cos(angle+PI*13/10)*reductionRate,-8*sin(angle+PI*13/10));
-      vertex(8*cos(angle+PI*8/5)*reductionRate,-8*sin(angle+PI*8/5));
+      vertex(8*cosA*reductionRate,-8*sinA);
+      vertex(18*(cosA*cos3_5 - sinA*sin3_5)*reductionRate,
+            -18*(sinA*cos3_5 + cosA*sin3_5));
+      vertex(-8*sinA*reductionRate,-8*cosA);
+      vertex(12*(cosA*cos9_10 - sinA*sin9_10)*reductionRate,
+            -12*(sinA*cos9_10 + cosA*sin9_10));
+      vertex(8*(cosA*-cos1_6 - sinA*-sin1_6)*reductionRate,
+            -8*(sinA*-cos1_6 + cosA*-sin1_6));
+      vertex(12*(cosA*cos13_10 - sinA*sin13_10)*reductionRate,
+            -12*(sinA*cos13_10 + cosA*sin13_10));
+      vertex(8*(cosA*cos13_10 - sinA*sin13_10)*reductionRate,
+            -8*(sinA*cos13_10 + cosA*sin13_10));
+      vertex(8*(cosA*-cos3_5 - sinA*-sin3_5)*reductionRate,
+            -8*(sinA*-cos3_5 + cosA*-sin3_5));
     }else{
     //左向き
-      vertex(8*cos(angle)*reductionRate,-8*sin(angle));
-      vertex(18*cos(angle-PI*3/5)*reductionRate,-18*sin(angle-PI*3/5));
-      vertex(8*cos(angle-PI/2)*reductionRate,-8*sin(angle-PI/2));
-      vertex(12*cos(angle-PI*9/10)*reductionRate,-12*sin(angle-PI*9/10));
-      vertex(8*cos(angle-PI*7/6)*reductionRate,-8*sin(angle-PI*7/6));
-      vertex(12*cos(angle-PI*13/10)*reductionRate,-12*sin(angle-PI*13/10));
-      vertex(8*cos(angle-PI*13/10)*reductionRate,-8*sin(angle-PI*13/10));
-      vertex(8*cos(angle-PI*8/5)*reductionRate,-8*sin(angle-PI*8/5));
+      vertex(8*cosA*reductionRate,-8*sinA);
+      vertex(18*(cosA*cos3_5 + sinA*sin3_5)*reductionRate,
+            -18*(sinA*cos3_5 - cosA*sin3_5));
+      vertex(8*(cosA*cos1_2 + sinA*sin1_2)*reductionRate,
+            -8*(sinA*cos1_2 - cosA*sin1_2));
+      vertex(12*(cosA*cos9_10 + sinA*sin9_10)*reductionRate,
+            -12*(sinA*cos9_10 - cosA*sin9_10));
+      vertex(8*(cosA*-cos1_6 + sinA*-sin1_6)*reductionRate,
+            -8*(sinA*-cos1_6 - cosA*-sin1_6));
+      vertex(12*(cosA*cos13_10 + sinA*sin13_10)*reductionRate,
+            -12*(sinA*cos13_10 - cosA*sin13_10));
+      vertex(8*(cosA*cos13_10 + sinA*sin13_10)*reductionRate,
+            -8*(sinA*cos13_10 - cosA*sin13_10));
+      vertex(8*(cosA*-cos3_5 + sinA*-sin3_5)*reductionRate,
+            -8*(sinA*-cos3_5 - cosA*-sin3_5));
     }
     endShape(CLOSE);
     popMatrix();
@@ -464,13 +481,15 @@ class Tail extends BodyParts{
 
   void display() {
     super.display();
+    float cosA = cos(angle);
+    float sinA = sin(angle);
     pushMatrix();
     translate(position.x, position.y);
     beginShape();
-    vertex(8*cos(angle)*reductionRate,-8*sin(angle));
-    vertex(4*cos(angle+PI/2)*reductionRate,-4*sin(angle+PI/2));
-    vertex(24*cos(angle+PI)*reductionRate,-24*sin(angle+PI));
-    vertex(4*cos(angle+PI*3/2)*reductionRate,-4*sin(angle+PI*3/2));
+    vertex(8*cosA*reductionRate,-8*sinA);
+    vertex(-4*sinA*reductionRate,-4*cosA);
+    vertex(-24*cosA*reductionRate,24*sinA);
+    vertex(4*sinA*reductionRate,4*cosA);
     endShape(CLOSE);
     popMatrix();
   }
