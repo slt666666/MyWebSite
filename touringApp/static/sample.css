@@ -9,6 +9,7 @@
   border: 1px solid #CECDD2;
 }
 body{
+  background-color: black;
 	margin: 0px;
 	padding: 0px;
 	position: relative;
@@ -20,4 +21,8 @@ body{
 }
 *:focus{
   outline:none;
+}
+#fox {
+  width: 335;
+  height: 201;
 }
