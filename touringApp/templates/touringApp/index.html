@@ -1,50 +1,29 @@
 {% load static %}
-{% load leaflet_tags %}
 
 <!DOCTYPE html>
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-    {% leaflet_js %}
-    {% leaflet_css %}
-    <link rel="stylesheet" href="{% static 'sample.css' %}">
+    <link rel="stylesheet" href="{% static 'index.css' %}">
+    <link rel="stylesheet" href="{% static 'colorbox.css' %}">
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/processing.js/1.6.5/processing.js"></script>
-	</head>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.colorbox/1.6.4/jquery.colorbox-min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.colorbox/1.6.4/i18n/jquery.colorbox-ja.js"></script>
+  </head>
 	<body>
     <div id="wrapper">
       <canvas id="main" data-processing-sources="{% static 'indoor_fish.pde' %}"></canvas>
 		</div>
-		<div id="map"></div>
-		<div id="button"></div>
+    <a class="iframe" href="http://127.0.0.1:8000/touringApp/showRoute/" title="showRoute">ここをclick</a>
 		<script>
-    $(function () {
-			$('#test').click(function(){
-				$('canvas').remove();
-				$('#wrapper').html("<img width='335' height='201' src={% static 'shadeFoxSample.png' %} >");
-			});
-    });
-
     function sizing(){
     	$("#main").attr({height:$("#wrapper").height()});
     	$("#main").attr({width:$("#wrapper").width()});
     }
-
-		var allPass = [];
-		{% for allRoute in all %}
-			var positionSet = []
-			{% for pass in allRoute %}
-				var position = { "id":{{pass.id}}, "latitude": {{pass.latitude}}, "longitude": {{pass.longitude}} };
-				positionSet.push(position);
-			{% endfor %}
-			allPass.push(positionSet);
-		{% endfor %}
-		</script>
-		<script src="{% static 'route.js' %}"></script>
-		<script>
-			$(function() {
-				$('#button').html("<button id='test'>test</button>");
-			})
+    $(document).ready(function(){
+      $(".iframe").colorbox({iframe:true, width:"80%", height:"80%"});
+    });
 		</script>
 	</body>
 </html>

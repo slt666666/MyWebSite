@@ -1,0 +1,28 @@
+{% load static %}
+{% load leaflet_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+    {% leaflet_js %}
+    {% leaflet_css %}
+    <link rel="stylesheet" href="{% static 'showRoute.css' %}">
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	</head>
+	<body>
+		<div id="map"></div>
+		<script>
+		var allPass = [];
+		{% for allRoute in all %}
+			var positionSet = []
+			{% for pass in allRoute %}
+				var position = { "id":{{pass.id}}, "latitude": {{pass.latitude}}, "longitude": {{pass.longitude}} };
+				positionSet.push(position);
+			{% endfor %}
+			allPass.push(positionSet);
+		{% endfor %}
+		</script>
+		<script src="{% static 'route.js' %}"></script>
+	</body>
+</html>

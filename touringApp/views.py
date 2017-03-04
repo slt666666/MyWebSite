@@ -6,11 +6,15 @@ import json
 
 # Create your views here.
 def index(request):
+    return render(request, 'touringApp/index.html')
+
+
+def showRoute(request):
     routePass = Route.objects.all()
     allRoute = []
     for route in routePass:
         allRoute.append(route.pass_set.all())
-    return render(request, 'touringApp/index.html', { 'all':allRoute })
+    return render(request, 'touringApp/showRoute.html', { 'all':allRoute })
 
 
 def getGIS(request):

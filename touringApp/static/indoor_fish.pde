@@ -4,7 +4,7 @@ pathfinder[] paths;
 void setup(){
   size(innerWidth,innerHeight);
   background(0);
-  fishes = new Flock(2,0);
+  fishes = new Flock(3,0);
   paths = new pathfinder[1];
   paths[0] = new pathfinder(width/2, height);
 }
@@ -29,7 +29,7 @@ void draw() {
     }
   }
 
-  if (fishes.creatures.size() < 2) {
+  if (fishes.creatures.size() < 3) {
     fishes.addFish(1);
   }
 }
