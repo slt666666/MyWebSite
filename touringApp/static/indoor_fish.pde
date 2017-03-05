@@ -26,12 +26,11 @@ void draw() {
   fishes.display();
 
   for (int i=0;i<paths.length;i++) {
-    PVector loc = paths[i].location;
     float diam = paths[i].diameter;
     if (diam > 1){
       fill((paths[i].colNum),255,255);
       stroke((paths[i].colNum),255,255);
-      ellipse(loc.x, loc.y, diam, diam);
+      ellipse(paths[i].location.x, paths[i].location.y, diam, diam);
       paths[i].update();
     }
   }
@@ -72,8 +71,10 @@ class Ball {
 
   Ball(){
     position = new PVector(width/2, 0);
-    dx = random(-6,6);
-    dy = random(1,2);
+    dx = random(-10,10);
+    if (dx > 0 && dx < 3){ dx += 3 };
+    if (dx < 0 && dx > -3){ dx -= 3 };
+    dy = random(0.5,3);
   }
 
   void move(){
@@ -324,10 +325,8 @@ class Head extends BodyParts{
 
   void update() {
     ball.move();
-    PVector followP = follow();
-    PVector separateP = separate();
-    velocity.add(followP);
-    velocity.add(separateP);
+    velocity.add(follow());
+    velocity.add(separate());
     velocity.limit(topspeed);
     position.add(velocity);
   }
