@@ -1,26 +1,46 @@
 Flock fishes;
 pathfinder[] paths;
-int width;
-int height;
+int mainWidth;
+int mainHeight;
+
+MenuIcon menu;
+MenuDetail detail;
+boolean menuIsset;
+boolean detailIsset;
+
+PImage menu0;
+PImage menu1;
+PImage menu2;
+PImage menu3;
+
 // 計算処理向上のため先に計算しておく
 float cos1_6 = cos(PI/6) ,sin1_6 = sin(PI/6), cos1_3 = cos(PI/3), sin1_3 = sin(PI/3), cos1_2 = cos(PI/2), sin1_2 = sin(PI/2), cos2_3 = cos(PI*2/3), sin2_3 = sin(PI*2/3)
     , cos3_5 = cos(PI*3/5), sin3_5 = sin(PI*3/5), cos9_10 = cos(PI*9/10), sin9_10 = sin(PI*9/10), cos13_10 = cos(PI*13/10), sin13_10 = sin(PI*13/10);
 
 void setup(){
-  width = innerWidth;
-  height = innerHeight;
-  size(width,height);
+  cursor(CROSS);
+  mainWidth = innerWidth;
+  mainHeight = innerHeight;
+  size(mainWidth,mainHeight);
   background(0);
   fishes = new Flock(3,0);
   paths = new pathfinder[1];
   paths[0] = new pathfinder(width/2, height);
+
+  menuIsset = false;
+  detailIsset = false;
+  smooth();
+  menu0 = loadImage(menu0pass);
+  menu1 = loadImage(menu1pass);
+  menu2 = loadImage(menu2pass);
+  menu3 = loadImage(menu3pass);
 }
 
 void draw() {
 
-  fill(0,0,0,8);
+  fill(0,0,0,12);
   stroke(0);
-  rect(0,0,width,height);
+  rect(0,0,mainWidth,mainHeight);
   fishes.deadCheck();
   fishes.update();
   fishes.display();
@@ -38,6 +58,13 @@ void draw() {
   if (fishes.creatures.size() < 3) {
     fishes.addFish(1);
   }
+
+  if (menuIsset) {
+    menu.display();
+  }
+  if (detailIsset) {
+    detail.display();
+  }
 }
 
 $('#test').click(function(){
@@ -53,14 +80,30 @@ $(function(){
     }
     timer = setTimeout(function() {
     //リロードする
-    width = innerWidth;
-    height = innerHeight;
+    mainWidth = innerWidth;
+    mainHeight = innerHeight;
+    size = (innerWidth, innerHeight);
     }, 200);
   });
 });
 
 void mousePressed(){
-   fishes.addFish(3);
+   //fishes.addFish(3);
+   if (!menuIsset){
+     menu = new MenuIcon();
+     menuIsset = true;
+   }else{
+     if (!menu.insideCheck()) {
+       menu = new MenuIcon();
+       menuIsset = true;
+       detailIsset = false;
+     }else{
+       // メニュー広げる処理
+       int selectNum = menu.selectNum;
+       detail = new MenuDetail(menu.iconSet[selectNum].positionX,menu.iconSet[selectNum].positionY,menu.selectNum);
+       detailIsset = true;
+     }
+   }
 }
 
 class Ball {
@@ -477,5 +520,195 @@ class Tail extends BodyParts{
     vertex(4*sinA*reductionRate,4*cosA);
     endShape(CLOSE);
     popMatrix();
+  }
+}
+
+
+class Detail {
+
+  float positionX;
+  float positionY;
+  int selectNum;
+  int detailNum;
+  int slide;
+  boolean appeared;
+  PImage img;
+
+  Detail(float x, float y, int selectNum, int detailNum) {
+    positionX = x;
+    positionY = y;
+    selectNum = selectNum;
+    detailNum = detailNum;
+    slide = 0;
+    img = menu0;
+    appeared = false;
+  }
+
+  boolean insideCheck() {
+    return (mouseX > positionX && mouseX < positionX+100 && mouseY < positionY && mouseY > positionY - 42);
+  }
+
+  void display() {
+
+    if (!appeared) {
+
+      fill(220,150);
+      rect(positionX, positionY, 100, -1-slide);
+      slide += 10;
+      if (slide > 41) { appeared = true; }
+
+    }else{
+      // insideCheck入れる
+      if (!insideCheck()){
+        fill(220,150);
+        rect(positionX, positionY, 100, -42);
+        tint(0,100);
+        image(img, positionX+8, positionY-30, 20, 20);
+      }else{
+        fill(256,183,76,150);
+        rect(positionX, positionY, 100, -42);
+        noTint();
+        image(img, positionX+8, positionY-30, 20, 20);
+      }
+    }
+  }
+}
+
+class Icon {
+
+  float positionX;
+  float positionY;
+  int slide;
+  boolean appeared;
+  PImage img;
+
+  Icon(float x, float y, int menuNum) {
+    positionX = x;
+    positionY = y;
+    slide = 1;
+    switch(menuNum) {
+  　　case 0:
+  　　　img = menu0;
+       break;
+  　　case 1:
+  　　　img = menu1;
+       break;
+     case 2:
+  　　　img = menu2;
+       break;
+     case 3:
+  　　　img = menu3;
+       break;
+  　　default:
+  　　　break
+  　}
+    appeared = false;
+  }
+
+  boolean insideCheck() {
+    return (dist(mouseX,mouseY,positionX,positionY) < 20);
+  }
+
+  void appear() {
+
+    stroke(200);
+    ellipse(positionX,positionY-50+slide,40,40);
+    slide += 10;
+    if (slide > 49){
+      appeared = true;
+    }
+
+  }
+
+  void display() {
+    if (insideCheck()) {
+      fill(255,183,76,150);
+      stroke(255,183,76,150);
+      ellipse(positionX,positionY,40,40);
+      strokeWeight(2);
+      stroke(0,150);
+      ellipse(positionX,positionY,38,38);
+      noTint();
+      image(img, positionX-13, positionY-13, 26, 26);
+    }else{
+      fill(200,150);
+      stroke(200,150);
+      ellipse(positionX,positionY,40,40);
+      strokeWeight(2);
+      stroke(0,150);
+      ellipse(positionX,positionY,38,38);
+      tint(0,100);
+      image(img, positionX-13, positionY-13, 26, 26);
+    }
+  }
+}
+
+class MenuDetail {
+
+  Detail[] details;
+  float positionX;
+  float positionY;
+
+  MenuDetail(float x, float y, int selectNum) {
+
+    positionX = x + 30;
+    positionY = y;
+    details = new Detail[2];
+    details[0] = new Detail(x + 52, y + 20, selectNum, 0);
+    details[1] = new Detail(x + 52, y - 25 ,selectNum, 1);
+  }
+
+  boolean insideCheck() {
+    return true;
+  }
+
+  void display() {
+        // 矢印
+    fill(220,150);
+    triangle(positionX, positionY, positionX+20, positionY+10, positionX+20, positionY-10);
+    fill(0,150);
+    ellipse(positionX+15,positionY,2,2);
+    details[0].display();
+    details[1].display();
+  }
+}
+
+class MenuIcon {
+
+  boolean appeared;
+  int selectNum;
+  Icon[] iconSet;
+
+  MenuIcon() {
+    iconSet = new Icon[4];
+    for (int i = 0; i < 4; i++){
+      iconSet[i] = new Icon(mouseX,mouseY+i*50,i);
+    }
+    appeared = false;
+  }
+
+  boolean insideCheck() {
+
+    for (int j = 0; j < 4; j++) {
+      if (iconSet[j].insideCheck()){
+        selectNum = j;
+        return true;
+      }
+    }
+    return false;
+  }
+
+  void display() {
+    iconSet[0].appeared = true;
+    for (int i = 3; i > 0; i--){
+      if (iconSet[i-1].appeared) {
+        if (iconSet[i].appeared) {
+          iconSet[i].display();
+        }else{
+          iconSet[i].appear();
+        }
+      }
+    }
+    iconSet[0].display();
   }
 }

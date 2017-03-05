@@ -10,14 +10,18 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/processing.js/1.6.5/processing.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.colorbox/1.6.4/jquery.colorbox-min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.colorbox/1.6.4/i18n/jquery.colorbox-ja.js"></script>
-  </head>
+		<script>
+			var menu0pass = "{% static 'images/menu0.png' %}";
+			var menu1pass = "{% static 'images/menu1.png' %}";
+			var menu2pass = "{% static 'images/menu2.png' %}";
+			var menu3pass = "{% static 'images/menu3.png' %}";
+		</script>
+	</head>
 
 	<body>
-
     <div id="wrapper">
-      <canvas id="main" data-processing-sources="{% static 'indoor_fish.pde' %}"></canvas>
+      <canvas id="main" data-processing-sources="{% static 'graphicSystem.pde' %}"></canvas>
 		</div>
-
     <a class="iframe" href="http://127.0.0.1:8000/touringApp/showRoute/" title="showRoute" hidden></a>
     <a class="iframe" href="http://127.0.0.1:8000/admin/" title="admin" hidden></a>
     <script>
