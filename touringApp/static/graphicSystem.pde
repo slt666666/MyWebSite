@@ -1,3 +1,4 @@
+/* @pjs font="/static/sword_art_online_font_by_darkblackswords-d5nssbp.otf"; */
 Flock fishes;
 pathfinder[] paths;
 int mainWidth;
@@ -26,6 +27,9 @@ void setup(){
   fishes = new Flock(3,0);
   paths = new pathfinder[1];
   paths[0] = new pathfinder(width/2, height);
+
+  font = loadFont(SAOfont);
+  textFont(font);
 
   menuIsset = false;
   detailIsset = false;
@@ -65,6 +69,12 @@ void draw() {
   if (detailIsset) {
     detail.display();
   }
+
+  fill(220,150);
+  stroke(220, 150);
+  textSize(48);
+  textAlign(CENTER);
+  text("Welcome to SandBox !!!",0, height/2, width, 50);
 }
 
 $('#test').click(function(){
