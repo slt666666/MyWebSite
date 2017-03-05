@@ -6,8 +6,13 @@ int mainHeight;
 
 MenuIcon menu;
 MenuDetail detail;
+DetailInfo info;
 boolean menuIsset;
 boolean detailIsset;
+boolean infoIsset;
+float infoSlide;
+
+PFont font;
 
 PImage menu0;
 PImage menu1;
@@ -33,6 +38,8 @@ void setup(){
 
   menuIsset = false;
   detailIsset = false;
+  infoIsset = false;
+  infoSlide = 0;
   smooth();
   menu0 = loadImage(menu0pass);
   menu1 = loadImage(menu1pass);
@@ -69,6 +76,11 @@ void draw() {
   if (detailIsset) {
     detail.display();
   }
+  if (infoIsset) {
+    info.display();
+  }else{
+    infoSlide = 0;
+  }
 
   fill(220,150);
   stroke(220, 150);
@@ -104,17 +116,28 @@ void mousePressed(){
      menuIsset = true;
    }else{
      if (!menu.insideCheck()) {
-       menu = new MenuIcon();
-       menuIsset = true;
-       detailIsset = false;
+       //メニュークリック時
+       if (detailIsset){
+         if (detail.insideCheck()){
+           //メニュークリックした時の挙動はここ
+         }else{
+           menu = new MenuIcon();
+           menuIsset = true;
+           detailIsset = false;
+         }
+       }else{
+         menu = new MenuIcon();
+         menuIsset = true;
+         detailIsset = false;
+       }
      }else{
        // メニュー広げる処理
        int selectNum = menu.selectNum;
-       detail = new MenuDetail(menu.iconSet[selectNum].positionX,menu.iconSet[selectNum].positionY,menu.selectNum);
+       detail = new MenuDetail(menu.iconSet[selectNum].positionX,menu.iconSet[selectNum].positionY,selectNum);
        detailIsset = true;
      }
    }
-}
+ }
 
 class Ball {
 
@@ -131,9 +154,6 @@ class Ball {
   }
 
   void move(){
-    //fill(255);
-    //stroke(255);
-    //ellipse(position.x,position.y,4,4);
     position.x += dx;
     position.y += dy;
 
@@ -176,9 +196,6 @@ class BodyParts {
   }
 
   void display() {
-    // processingでは上ほどyが小さく、下ほどyが大きい。
-    // radian、角度を使う計算を取り入れるときは注意
-    // 今回は正規の座標系で計算してからprocessing座標に変換する
 
     angle = atan2(-velocity.y, velocity.x);
     float mapAngle = abs(angle);
@@ -190,7 +207,6 @@ class BodyParts {
     stroke(0,colNum,255);
     strokeWeight(2);
     fill(0,colNum,255);
-
   }
 
   boolean collision(){
@@ -216,10 +232,6 @@ class Creature{
   void update(){
     //頭部の更新
     brain.update();
-    //その他のBodyパーツ更新
-    //for (int i = 1; i < bodies.size(); i++){
-    //  bodies.get(i).update(bodies.get(i-1));
-    //}
   }
 
   void display(){
@@ -325,10 +337,6 @@ class Flock{
       fishHead brain = new fishHead(random(width), 0, random(255));
       creatures.add(new CreatureFish(6, brain));
     }
-    //for (int i = 0; i < num_hebi; i++){
-    //  hebiHead brain = new hebiHead(random(width), 0, random(255));
-    //  creatures.add(new CreatureHebikera(4, brain));
-    //}
   }
 
   void addFish(int num){
@@ -337,11 +345,6 @@ class Flock{
       creatures.add(new CreatureFish(6, brain));
     }
   }
-
-  //void addHebi(){
-  //  hebiHead brain = new hebiHead(random(width), 0, random(255));
-  //  creatures.add(new CreatureHebikera(4, brain));
-  //}
 
   void update(){
     for (Creature c: creatures){
@@ -395,7 +398,6 @@ class Head extends BodyParts{
     float desiredDistance = 12;
     PVector sum = new PVector();
     int count = 0;
-  //for (Creature c: FishAndHebi.creatures){
     for (Creature c: fishes.creatures){
       for (BodyParts p: c.bodies){
         float d = PVector.dist(position, p.position);
@@ -544,11 +546,11 @@ class Detail {
   boolean appeared;
   PImage img;
 
-  Detail(float x, float y, int selectNum, int detailNum) {
+  Detail(float x, float y, int select, int detail) {
     positionX = x;
     positionY = y;
-    selectNum = selectNum;
-    detailNum = detailNum;
+    selectNum = select;
+    detailNum = detail;
     slide = 0;
     img = menu0;
     appeared = false;
@@ -559,6 +561,7 @@ class Detail {
   }
 
   void display() {
+    menu.iconSet[selectNum].displaySelect();
 
     if (!appeared) {
 
@@ -574,12 +577,52 @@ class Detail {
         rect(positionX, positionY, 100, -42);
         tint(0,100);
         image(img, positionX+8, positionY-30, 20, 20);
+        fill(0,150);
+        textSize(30);
+        textAlign(LEFT);
+        text("aaaa",positionX+40,positionY-12);
       }else{
         fill(256,183,76,150);
         rect(positionX, positionY, 100, -42);
         noTint();
         image(img, positionX+8, positionY-30, 20, 20);
+        fill(255,150);
+        textSize(30);
+        textAlign(LEFT);
+        text("aaaa",positionX+40,positionY-12);
+        info = new DetailInfo(selectNum,detailNum);
+        infoIsset = true;
       }
+    }
+  }
+}
+
+class DetailInfo{
+
+  float positionX;
+  float positionY;
+  int selectNum;
+  int infoNum;
+
+  DetailInfo(int select, int info){
+    positionX = detail.details[info].positionX + 120;
+    positionY = detail.details[info].positionY - 42;
+    selectNum = select;
+    infoNum = info;
+  }
+
+  void display() {
+      fill(255,150);
+      triangle(positionX-20, positionY+21, positionX, positionY+31, positionX, positionY+11);
+      fill(0,150);
+      ellipse(positionX-5,positionY+21,2,2);
+    if (infoSlide > 0.9) {
+      fill(255,150);
+      rect(positionX,positionY,200,300);
+    }else{
+      fill(255,150);
+      rect(positionX,positionY,200*infoSlide,300*infoSlide);
+      infoSlide += 0.1;
     }
   }
 }
@@ -621,7 +664,7 @@ class Icon {
 
   void appear() {
 
-    stroke(200);
+    noStroke();
     fill(200,150);
     ellipse(positionX,positionY-50+slide,40,40);
     slide += 15;
@@ -652,6 +695,17 @@ class Icon {
       image(img, positionX-13, positionY-13, 26, 26);
     }
   }
+
+  void displaySelect(){
+    fill(255,183,76,150);
+    stroke(255,183,76,150);
+    ellipse(positionX,positionY,40,40);
+    strokeWeight(2);
+    stroke(0,150);
+    ellipse(positionX,positionY,38,38);
+    noTint();
+    image(img, positionX-13, positionY-13, 26, 26);
+  }
 }
 
 class MenuDetail {
@@ -659,18 +713,28 @@ class MenuDetail {
   Detail[] details;
   float positionX;
   float positionY;
+  int selectNum;
+  int infoNum;
 
   MenuDetail(float x, float y, int selectNum) {
 
     positionX = x + 30;
     positionY = y;
+    selectNum = selectNum;
     details = new Detail[2];
     details[0] = new Detail(x + 52, y + 20, selectNum, 0);
-    details[1] = new Detail(x + 52, y - 25 ,selectNum, 1);
+    details[1] = new Detail(x + 52, y - 26, selectNum, 1);
+
   }
 
   boolean insideCheck() {
-    return true;
+    for (int i = 0; i < 2; i++) {
+      if (details[i].insideCheck()){
+        infoNum = i;
+        return true;
+      }
+    }
+    return false;
   }
 
   void display() {
@@ -679,6 +743,7 @@ class MenuDetail {
     triangle(positionX, positionY, positionX+20, positionY+10, positionX+20, positionY-10);
     fill(0,150);
     ellipse(positionX+15,positionY,2,2);
+    infoIsset = false;
     details[0].display();
     details[1].display();
   }
