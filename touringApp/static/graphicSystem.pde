@@ -18,6 +18,7 @@ PImage menu0;
 PImage menu1;
 PImage menu2;
 PImage menu3;
+PImage user;
 
 // 計算処理向上のため先に計算しておく
 float cos1_6 = cos(PI/6) ,sin1_6 = sin(PI/6), cos1_3 = cos(PI/3), sin1_3 = sin(PI/3), cos1_2 = cos(PI/2), sin1_2 = sin(PI/2), cos2_3 = cos(PI*2/3), sin2_3 = sin(PI*2/3)
@@ -45,6 +46,7 @@ void setup(){
   menu1 = loadImage(menu1pass);
   menu2 = loadImage(menu2pass);
   menu3 = loadImage(menu3pass);
+  user = loadImage(userImagePass);
 }
 
 void draw() {
@@ -758,7 +760,9 @@ class MenuDetail {
       fill(20,150);
       textSize(30);
       textAlign(CENTER);
+      noTint();
       text("Toshiyuki",positionX-180,positionY-65);
+      image(user, positionX-260, positionY-40, 160, 160);
     }
   }
 }
