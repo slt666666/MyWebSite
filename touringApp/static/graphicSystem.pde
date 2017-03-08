@@ -893,10 +893,10 @@ class MenuDetail {
     if (menuNum == 0){
 
       if (userSlide < 220) {
-        userSlide += 10;
+        userSlide += 20;
       }else{
         if (underSlide < 80) {
-          underSlide += 10;
+          underSlide += 20;
         }
       }
       fill(220,150);
