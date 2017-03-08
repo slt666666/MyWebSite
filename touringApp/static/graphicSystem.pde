@@ -670,12 +670,12 @@ class DetailInfo{
        switch (infoNum) {
          case 0:
            infoTitle = "About This Site";
-           infoStr = "趣味開発中のWEBアプリのテスト\nサーバー連携が必要な物の\nチェック用ついでに作ったサイト。\n\n何かを作ってて試したくなったり、残しておきたい作品とかが出来たらここに残していく。いわゆる砂場。";
+           infoStr = "趣味開発中のWEBアプリのテストとかサーバー連携が必要な物の\nチェック用ついでに作ったサイト。\n\n何かを作ってて試したくなったり、残しておきたい作品とかが出来たらここに残していく。いわゆる砂場。";
            infoSize = 200;
            break;
          case 1:
            infoTitle = "Languages/Frameworks";
-           infoStr = "サイトはPythonのDjangoで構築\n\nデザイン周りは基本的にprocessingにJavaScriptを入れ込んで作ってみました。あとはjQueryとかleaflet.jsとかcolorBoxとか\n\n基本的に仕事ではiOSアプリ屋さんなので、WEB周りはいまいち。Djangoもお試しって感じで、PHPのPhalconかElixirのPhoenixを使ってみたい。";
+           infoStr = "サイトはPythonのDjangoで構築\nデザイン周りは基本的にprocessingにJavaScriptを入れ込んで作ってみました。あとはjQueryとかleaflet.jsとかcolorBoxとか\n\n基本的に仕事ではiOSアプリ屋さんなので、WEB周りはいまいち。Djangoもお試しって感じで、PHPのPhalconかElixirのPhoenixを使ってみたい。";
            infoSize = 260;
            break;
          case 2:
@@ -689,12 +689,12 @@ class DetailInfo{
        switch (infoNum) {
          case 0:
            infoTitle = "Touring Log";
-           infoStr = "ツーリングログのデモを開く。\n\n●機能(まだまだ初期段階)\n走ったルートを記録し、\n地図上にルートが表示される。\nルートと画像を連携表示。\n\n●課題\nGPSロガー等との連携\nUIデザイン...etc";
+           infoStr = "クリックすると、ツーリングログのデモが開く。\n\n●機能(まだまだ初期段階)\n走ったルートを記録し、\n地図上にルートが表示される。\nルートと画像を連携表示。\n\n●課題\nGPSロガー等との連携\nUIデザイン...etc";
            infoSize = 210;
            break;
          case 1:
            infoTitle = "Log Setting";
-           infoStr = "Touring Logの設定画面\n\n現在管理者のみアクセス可能\n使いやすくなるまで...";
+           infoStr = "クリックするとTouring Logの設定画面へ\n\n現在管理者のみアクセス可能\n使いやすくなるまで...";
            infoSize = 120;
            break;
        }
@@ -727,7 +727,7 @@ class DetailInfo{
     if (infoSlide < 1.0) {
       infoSlide += 0.1;
     }
-    fill(255,150);
+    fill(255,100);
     textAlign(CENTER);
     rect(positionX,positionY,200,infoSize*infoSlide);
     fill(50,150);
