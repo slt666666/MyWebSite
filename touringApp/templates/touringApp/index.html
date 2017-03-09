@@ -16,6 +16,7 @@
 			var menu2pass = "{% static 'images/menu2.png' %}";
 			var menu3pass = "{% static 'images/menu3.png' %}";
 			var userImagePass = "{% static 'images/user.png' %}";
+			var myBikePass = "{% static 'images/mybike.jpg' %}";
 			var twitterPass = "{% static 'images/twitter.png' %}";
 			var facebookPass = "{% static 'images/facebook.png' %}";
 			var githubPass = "{% static 'images/github.png' %}";
@@ -36,8 +37,8 @@
     <div id="wrapper">
       <canvas id="main" data-processing-sources="{% static 'graphicSystem.pde' %}"></canvas>
 		</div>
-    <a class="iframe" href="http://127.0.0.1:8000/touringApp/showRoute/" title="showRoute" hidden></a>
-    <a class="iframe" href="http://127.0.0.1:8000/admin/" title="admin" hidden></a>
+    <a id="showRoute" class="iframe" href="http://127.0.0.1:8000/touringApp/showRoute/" title="showRoute" hidden></a>
+    <a id="admin" class="iframe" href="http://127.0.0.1:8000/admin/" title="admin" hidden></a>
     <script>
       // canvasサイズを画面に合わせる
       function sizing(){

@@ -11,17 +11,15 @@ boolean menuIsset;
 boolean detailIsset;
 boolean infoIsset;
 float infoSlide;
+int[] openPageNum;
 
 PFont font;
 PFont font2;
-PImage menu0;
-PImage menu1;
-PImage menu2;
-PImage menu3;
-PImage user;
+PImage menu0, menu1, menu2, menu3;
+PImage user, myBike;
 PImage facebook,twitter,github;
-PImage menu0_0, menu0_1, menu0_2, menu1_0, menu1_1, menu2_0, menu3_0, menu3_1;
-String content0_0,content0_1,content0_2,content1_0,content1_1,content2_0,content3_0,content3_1;
+PImage menu0_0, menu0_1, menu0_2, menu1_0, menu1_1, menu1_2, menu2_0, menu3_0, menu3_1;
+String content0_0,content0_1,content0_2,content1_0,content1_1,content1_2,content2_0,content3_0,content3_1;
 PImage[][] contentImages;
 String[][] contentStrs;
 
@@ -47,6 +45,7 @@ void setup(){
   detailIsset = false;
   infoIsset = false;
   infoSlide = 0;
+  openPageNum = new Int[2];
   smooth();
 
   menu0 = loadImage(menu0pass);
@@ -54,6 +53,7 @@ void setup(){
   menu2 = loadImage(menu2pass);
   menu3 = loadImage(menu3pass);
   user = loadImage(userImagePass);
+  myBike = loadImage(myBikePass);
   twitter = loadImage(twitterPass);
   facebook = loadImage(facebookPass);
   github = loadImage(githubPass);
@@ -62,6 +62,7 @@ void setup(){
   menu0_2 = loadImage(menu0_2Pass);
   menu1_0 = loadImage(menu1_0Pass);
   menu1_1 = loadImage(menu1_1Pass);
+  menu1_2 = loadImage(menu1pass);
   menu2_0 = loadImage(menu2_0Pass);
   menu3_0 = loadImage(menu3_0Pass);
   menu3_1 = loadImage(menu3_1Pass);
@@ -71,6 +72,7 @@ void setup(){
   contentImages[0][2] = menu0_1;
   contentImages[1][0] = menu1_0;
   contentImages[1][1] = menu1_1;
+  contentImages[1][2] = menu1_2;
   contentImages[2][0] = menu2_0;
   contentImages[3][0] = menu3_0;
   contentImages[3][1] = menu3_1;
@@ -79,6 +81,7 @@ void setup(){
   content0_2 = "Code";
   content1_0 = "Touring Log";
   content1_1 = "Route Map";
+  content1_2 = "Bike";
   content2_0 = "Please Wait...";
   content3_0 = "Settings";
   content3_1 = "Log Out";
@@ -88,6 +91,7 @@ void setup(){
   contentStrs[0][2] = content0_1;
   contentStrs[1][0] = content1_0;
   contentStrs[1][1] = content1_1;
+  contentStrs[1][2] = content1_2;
   contentStrs[2][0] = content2_0;
   contentStrs[3][0] = content3_0;
   contentStrs[3][1] = content3_1;
@@ -139,6 +143,12 @@ $('#test').click(function(){
   noLoop();
 });
 
+$(function(){
+    $(".iframe").colorbox({
+        onClosed:function(){ loop(); }
+    });
+});
+
 // 画面サイズ変更時の処理
 $(function(){
   var timer = false;
@@ -166,6 +176,10 @@ void mousePressed(){
        if (detailIsset){
          if (detail.insideCheck()){
            //メニュークリックした時の挙動はここ
+           $(function(){
+            $('#showRoute').trigger('click');
+           });
+           noLoop();
          }else{
            menu = new MenuIcon();
            menuIsset = true;
@@ -675,7 +689,7 @@ class DetailInfo{
            break;
          case 1:
            infoTitle = "Languages/Frameworks";
-           infoStr = "サイトはPythonのDjangoで構築\nデザイン周りは基本的にprocessingにJavaScriptを入れ込んで作ってみました。あとはjQueryとかleaflet.jsとかcolorBoxとか\n\n基本的に仕事ではiOSアプリ屋さんなので、WEB周りはいまいち。Djangoもお試しって感じで、PHPのPhalconかElixirのPhoenixを使ってみたい。";
+           infoStr = "サイトはPythonのDjangoで構築\nデザイン周りは基本的にprocessingにJavaScriptを入れ込んで作ってみました。あとはjQueryとかleaflet.jsとかcolorBoxとか\n\n基本的に仕事ではiOSアプリ屋さんなので、WEB周りはいまいち...。Djangoもお試しで、PHPのPhalconかElixirのPhoenixを使ってみたい。";
            infoSize = 260;
            break;
          case 2:
@@ -696,6 +710,11 @@ class DetailInfo{
            infoTitle = "Log Setting";
            infoStr = "クリックするとTouring Logの設定画面へ\n\n現在管理者のみアクセス可能\n使いやすくなるまで...";
            infoSize = 120;
+           break;
+         case 2:
+           infoTitle = "Motorcycle";
+           infoStr = "乗ってるバイクを見る"
+           infoSize = 80;
            break;
        }
       break;
@@ -856,7 +875,7 @@ class MenuDetail {
         returnNum = 3;
         break;
       case 1:
-        returnNum = 2;
+        returnNum = 3;
         break;
       case 2:
         returnNum = 1;
@@ -870,9 +889,11 @@ class MenuDetail {
   }
 
   boolean insideCheck() {
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < contentNum; i++) {
       if (details[i].insideCheck()){
         infoNum = i;
+        openPageNum = [menuNum,i];
+        console.log(openPageNum);
         return true;
       }
     }
