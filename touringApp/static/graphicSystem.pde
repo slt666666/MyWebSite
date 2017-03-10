@@ -147,6 +147,12 @@ $(function(){
     $(".iframe").colorbox({
         onClosed:function(){ loop(); }
     });
+    $(".modalImage").colorbox({
+        onClosed:function(){ loop(); }
+    });
+    $(".logout").colorbox({
+        onClosed:function(){ loop(); }
+    });
 });
 
 // 画面サイズ変更時の処理
@@ -174,12 +180,54 @@ void mousePressed(){
      if (!menu.insideCheck()) {
        //メニュークリック時
        if (detailIsset){
+         if (detail.checkSNS() != 0){
+           switch (detail.checkSNS()) {
+             case 1:
+              window.location.href = 'https://github.com/slt666666';
+             break;
+             case 2:
+              window.location.href = 'https://twitter.com/slt666666';
+             break;
+             case 3:
+              window.location.href = 'https://www.facebook.com/toshiyuki.sakai.775';
+             break;
+             default:
+             break;
+           }
+         }
          if (detail.insideCheck()){
            //メニュークリックした時の挙動はここ
-           $(function(){
-            $('#showRoute').trigger('click');
-           });
-           noLoop();
+           if (openPageNum[0] == 1 && openPageNum[1] == 0){
+             $(function(){
+               $('#showRoute').trigger('click');
+             });
+             noLoop();
+           };
+           if (openPageNum[0] == 1 && openPageNum[1] == 1){
+             $(function(){
+               $('#getGIS').trigger('click');
+             });
+             noLoop();
+           };
+           if (openPageNum[0] == 1 && openPageNum[1] == 2){
+             $(function(){
+               $('#myBike').trigger('click');
+             });
+             noLoop();
+           };
+           if (openPageNum[0] == 3 && openPageNum[1] == 0){
+             $(function(){
+               $('#admin').trigger('click');
+             });
+             noLoop();
+           };
+           if (openPageNum[0] == 3 && openPageNum[1] == 1){
+             // ログアウトの画面！！！
+             $(function(){
+               $('#logout').trigger('click');
+             });
+             noLoop();
+           };
          }else{
            menu = new MenuIcon();
            menuIsset = true;
@@ -685,16 +733,16 @@ class DetailInfo{
          case 0:
            infoTitle = "About This Site";
            infoStr = "趣味開発中のWEBアプリのテストとかサーバー連携が必要な物の\nチェック用ついでに作ったサイト。\n\n何かを作ってて試したくなったり、残しておきたい作品とかが出来たらここに残していく。いわゆる砂場。";
-           infoSize = 200;
+           infoSize = 180;
            break;
          case 1:
            infoTitle = "Languages/Frameworks";
            infoStr = "サイトはPythonのDjangoで構築\nデザイン周りは基本的にprocessingにJavaScriptを入れ込んで作ってみました。あとはjQueryとかleaflet.jsとかcolorBoxとか\n\n基本的に仕事ではiOSアプリ屋さんなので、WEB周りはいまいち...。Djangoもお試しで、PHPのPhalconかElixirのPhoenixを使ってみたい。";
-           infoSize = 260;
+           infoSize = 240;
            break;
          case 2:
            infoTitle = "About Me";
-           infoStr = "農学部出身エンジニア。\n今年はプログラマー+院生\n\n普段はアプリ(Swift)の仕事が多めJavaScriptで可視化したりとかも\n\n好きなもの:\nトマト・バイク・ボクシング\nアルゴリズムを考えること";
+           infoStr = "農学部出身エンジニア。\n今年はプログラマー+院生\n\n普段はアプリ(Swift)の仕事が多めJavaScriptで可視化したりとかも\n好きなもの:\nトマト・バイク・ボクシング\nアルゴリズムを考えること";
            infoSize = 200;
            break;
        }
@@ -704,17 +752,17 @@ class DetailInfo{
          case 0:
            infoTitle = "Touring Log";
            infoStr = "クリックすると、ツーリングログのデモが開く。\n\n●機能(まだまだ初期段階)\n走ったルートを記録し、\n地図上にルートが表示される。\nルートと画像を連携表示。\n\n●課題\nGPSロガー等との連携\nUIデザイン...etc";
-           infoSize = 210;
+           infoSize = 220;
            break;
          case 1:
            infoTitle = "Log Setting";
            infoStr = "クリックするとTouring Logの設定画面へ\n\n現在管理者のみアクセス可能\n使いやすくなるまで...";
-           infoSize = 120;
+           infoSize = 130;
            break;
          case 2:
            infoTitle = "Motorcycle";
-           infoStr = "乗ってるバイクを見る"
-           infoSize = 80;
+           infoStr = "バイクが見られる"
+           infoSize = 70;
            break;
        }
       break;
@@ -916,7 +964,7 @@ class MenuDetail {
       if (userSlide < 220) {
         userSlide += 20;
       }else{
-        if (underSlide < 80) {
+        if (underSlide < 100) {
           underSlide += 20;
         }
       }
@@ -935,12 +983,12 @@ class MenuDetail {
       fill(70,150);
       stroke(70,150);
       line(positionX-100,positionY-60,positionX-260,positionY-60);
-      textFont(font,30);
+      textFont(font,22);
       textAlign(CENTER);
       text("Toshiyuki",positionX-180,positionY-65);
       tint(0,100);
       image(user, positionX-260, positionY-40, 160, 160);
-      fill(240,150);
+      fill(150,150);
       noStroke();
       beginShape();
       vertex(positionX-80, positionY-100+userSlide);
@@ -961,12 +1009,35 @@ class MenuDetail {
         line(positionX-260,positionY-12,positionX-260,positionY+8);
         line(positionX-260,positionY+8,positionX-220,positionY+30);
         text("SV400",positionX-200,positionY-12);
-        text("[ slt666666 ]",positionX-180,positionY+150);
+        textFont(font,15);
+        text("[  slt666666  ]",positionX-190,positionY+150);
         noTint();
-        image(github,positionX-260,positionY+165,32,32);
-        image(twitter,positionX-200,positionY+165,32,32);
-        image(facebook,positionX-140,positionY+165,32,32);
+        for (int i = 0; i < 3; i++){
+          fill(255,150);
+          noStroke();
+          ellipse(positionX-238+i*58,positionY+186,40,40);
+        }
+        if (checkSNS() != 0) {
+          fill(255,150,48,150);
+          noStroke();
+          ellipse(positionX-238+(checkSNS()-1)*58,positionY+186,40,40);
+        }
+        image(github,positionX-254,positionY+170,32,32);
+        image(twitter,positionX-196,positionY+170,32,32);
+        image(facebook,positionX-138,positionY+170,32,32);
       }
+    }
+  }
+
+  Int checkSNS() {
+    if (dist(mouseX,mouseY,positionX-238,positionY+186) < 20) {
+      return 1;
+    }else if(dist(mouseX,mouseY,positionX-180,positionY+186) < 20){
+      return 2;
+    }else if(dist(mouseX,mouseY,positionX-122,positionY+186) < 20){
+      return 3;
+    }else{
+      return 0;
     }
   }
 }

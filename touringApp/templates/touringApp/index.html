@@ -37,8 +37,11 @@
     <div id="wrapper">
       <canvas id="main" data-processing-sources="{% static 'graphicSystem.pde' %}"></canvas>
 		</div>
-    <a id="showRoute" class="iframe" href="http://127.0.0.1:8000/touringApp/showRoute/" title="showRoute" hidden></a>
-    <a id="admin" class="iframe" href="http://127.0.0.1:8000/admin/" title="admin" hidden></a>
+    <a id="showRoute" class="iframe" href="http://127.0.0.1:8000/touringApp/showRoute/" title="TouringLogApp" hidden></a>
+		<a id="getGIS" class="iframe" href="http://127.0.0.1:8000/touringApp/getGIS/" title="getGIS" hidden><a>
+		<a id="admin" class="iframe" href="http://127.0.0.1:8000/admin/" title="admin" hidden></a>
+		<a id="logout" class="logout" href="http://127.0.0.1:8000/logout/" title="logout" hidden></a>
+		<a id="myBike" class="modalImage" href="{% static 'images/mybike.jpg' %}" title="僕のSV400(にたまたま猫が乗ってた)">
     <script>
       // canvasサイズを画面に合わせる
       function sizing(){
@@ -49,6 +52,8 @@
       // colorBox設定
       $(document).ready(function(){
         $(".iframe").colorbox({iframe:true, width:"80%", height:"100%", fixed:true, right:0});
+				$(".modalImage").colorbox({width:"50%", height:"50%"});
+				$(".logout").colorbox({iframe:true, width:"70%", height:"70%", fixed:true});
       });
 		</script>
 	</body>
