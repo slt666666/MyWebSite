@@ -330,4 +330,7 @@ L.control.title = function(title, options){
 };
 
 L.control.title("route test").addTo(map);
+L.control.title("route test").addTo(map);
+L.control.title("route test").addTo(map);
+L.control.title("route test").addTo(map);
 animate();
