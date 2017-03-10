@@ -181,6 +181,7 @@ void mousePressed(){
        //メニュークリック時
        if (detailIsset){
          if (detail.checkSNS() != 0){
+           noLoop();
            switch (detail.checkSNS()) {
              case 1:
               window.location.href = 'https://github.com/slt666666';
@@ -1015,12 +1016,12 @@ class MenuDetail {
         for (int i = 0; i < 3; i++){
           fill(255,150);
           noStroke();
-          ellipse(positionX-238+i*58,positionY+186,40,40);
+          ellipse(positionX-238+i*58,positionY+186,32,32);
         }
         if (checkSNS() != 0) {
           fill(255,150,48,150);
           noStroke();
-          ellipse(positionX-238+(checkSNS()-1)*58,positionY+186,40,40);
+          ellipse(positionX-238+(checkSNS()-1)*58,positionY+186,32,32);
         }
         image(github,positionX-254,positionY+170,32,32);
         image(twitter,positionX-196,positionY+170,32,32);
@@ -1030,11 +1031,11 @@ class MenuDetail {
   }
 
   Int checkSNS() {
-    if (dist(mouseX,mouseY,positionX-238,positionY+186) < 20) {
+    if (dist(mouseX,mouseY,positionX-238,positionY+186) < 16) {
       return 1;
-    }else if(dist(mouseX,mouseY,positionX-180,positionY+186) < 20){
+    }else if(dist(mouseX,mouseY,positionX-180,positionY+186) < 16){
       return 2;
-    }else if(dist(mouseX,mouseY,positionX-122,positionY+186) < 20){
+    }else if(dist(mouseX,mouseY,positionX-122,positionY+186) < 16){
       return 3;
     }else{
       return 0;
