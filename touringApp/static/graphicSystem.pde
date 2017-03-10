@@ -48,6 +48,7 @@ void setup(){
   openPageNum = new Int[2];
   smooth();
 
+  // 画像読み込み
   menu0 = loadImage(menu0pass);
   menu1 = loadImage(menu1pass);
   menu2 = loadImage(menu2pass);
