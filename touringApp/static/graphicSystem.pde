@@ -117,6 +117,12 @@ void draw() {
     }
   }
 
+  fill(220,150);
+  stroke(220, 150);
+  textAlign(CENTER);
+  textFont(font,48);
+  text("Welcome to SandBox !!!",0, height/2, width, 50);
+
   if (fishes.creatures.size() < 3) {
     fishes.addFish(1);
   }
@@ -132,12 +138,6 @@ void draw() {
   }else{
     infoSlide = 0;
   }
-
-  fill(220,150);
-  stroke(220, 150);
-  textAlign(CENTER);
-  textFont(font,48);
-  text("Welcome to SandBox !!!",0, height/2, width, 50);
 }
 
 func playSound(id) {
@@ -807,7 +807,7 @@ class DetailInfo{
     if (infoSlide < 1.0) {
       infoSlide += 0.1;
     }
-    fill(255,100);
+    fill(220,50);
     textAlign(CENTER);
     rect(positionX,positionY,200,infoSize*infoSlide);
     fill(50,150);
