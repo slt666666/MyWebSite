@@ -31,6 +31,8 @@
 			var SAOfont = "{% static 'sword_art_online_font_by_darkblackswords-d5nssbp.otf' %}";
 			var arial = "{% static 'arial.ttf' %}";
 		</script>
+		<audio id="openMenu" preload="auto" src="{% static 'sound/openMenu.mp3' %}" ></audio>
+		<audio id="openDetail" preload="auto" src="{% static 'sound/openDetail.mp3' %}" ></audio>
 	</head>
 
 	<body>
@@ -55,6 +57,7 @@
 				$(".modalImage").colorbox({width:"50%", height:"50%"});
 				$(".logout").colorbox({iframe:true, width:"70%", height:"70%", fixed:true});
       });
+
 		</script>
 	</body>
 </html>

@@ -140,9 +140,16 @@ void draw() {
   text("Welcome to SandBox !!!",0, height/2, width, 50);
 }
 
-$('#test').click(function(){
-  noLoop();
-});
+func playSound(id) {
+  if( typeof( document.getElementById(id).currentTime ) != 'undefined' ) {
+    document.getElementById(id).currentTime = 0;
+  }
+  if (id == 'openMenu') {
+    $('#openMenu').get(0).play();
+  } else {
+    $('#openDetail').get(0).play();
+  }
+}
 
 $(function(){
     $(".iframe").colorbox({
@@ -177,6 +184,7 @@ void mousePressed(){
    if (!menuIsset){
      menu = new MenuIcon();
      menuIsset = true;
+     playSound('openMenu');
    }else{
      if (!menu.insideCheck()) {
        //メニュークリック時
@@ -234,17 +242,20 @@ void mousePressed(){
            menu = new MenuIcon();
            menuIsset = true;
            detailIsset = false;
+           playSound('openMenu');
          }
        }else{
          menu = new MenuIcon();
          menuIsset = true;
          detailIsset = false;
+         playSound('openMenu');
        }
      }else{
        // メニュー広げる処理
        int selectNum = menu.selectNum;
        detail = new MenuDetail(menu.iconSet[selectNum].positionX,menu.iconSet[selectNum].positionY,selectNum);
        detailIsset = true;
+       playSound('openDetail');
      }
    }
  }
