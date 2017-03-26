@@ -120,6 +120,32 @@ L.Control.Animate = L.Control.extend({
   }
 });
 
+// 画像表示部分
+L.Control.Picture = L.Control.extend({
+  options: {
+    position: "topleft"
+  },
+
+  initialize: function(picture, options){
+    L.setOptions(this, options);
+    this._picture = picture;
+  },
+
+  onAdd: function(map){
+    var container = L.DomUtil.create("div", "leaflet-control-picture");
+    container.innerHTML = this._picture
+    //container.innerHTML = "<img src ='http://xxxxx.jpg'>";
+    return container;
+  }
+});
+
+L.control.picture = function(picture, options){
+    return new L.Control.Picture(picture, options);
+};
+
+var showPicture = L.control.picture("http://xxxxx.jpg");
+
+
 // L.controlオブジェクトに関数追加
 L.control.animate = function(options){
   return new L.Control.Animate(options);
@@ -212,7 +238,8 @@ var buildLabelAnimation = function(allPass){
           // Labelオブジェクト作成
           var label = new L.Label(
             [stop.latitude, stop.longitude],
-            stop.stop
+            stop.latitude
+            //stop.stop
           );
           map.addLayer(label);
           labels.push( {minutes: minutes, label: label, status: "shown"} ); // 到達時
@@ -267,6 +294,9 @@ var animateStep = function() {
     var label = labelAnimation[0].label;
     if (step < maxPathSteps || label.getStatus() === "shown"){
       label.setStatus(labelAnimation[0].status); // ここでlabelのopacityを変更
+      // ここで画像を表示させられる？？
+      showPicture._picture = label._label;
+      showPicture.addTo(map);
     }
     labelAnimation.shift();
   }
@@ -330,7 +360,5 @@ L.control.title = function(title, options){
 };
 
 L.control.title("route test").addTo(map);
-L.control.title("route test").addTo(map);
-L.control.title("route test").addTo(map);
-L.control.title("route test").addTo(map);
+
 animate();
